@@ -11,54 +11,30 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/user")
 public class MessageController {
 
     @Autowired
     UserRepository userRepository;
 
-    // Get All Notes
-    @GetMapping("/user")
-    public List<User> getAllNotes() {
-        return userRepository.findAll();
-    }
-
     // Create a new User
-    @PostMapping("/user")
+    @PostMapping("/signup")
     public User createUser(@Valid @RequestBody User user) {
+
         return userRepository.save(user);
     }
 
-    // Get a Single Note
-    @GetMapping("/notes/{id}")
-    public Note getNoteById(@PathVariable(value = "id") Long noteId) {
-        return noteRepository.findById(noteId)
-                .orElseThrow(() -> new ResourceNotFoundException("Note", "id", noteId));
+    // Log In in User
+    @PostMapping("/login")
+    public User loginUser(@Valid @RequestBody User user) {
+
+        return userRepository.save(user);
     }
 
-    // Update a Note
-    @PutMapping("/notes/{id}")
-    public Note updateNote(@PathVariable(value = "id") Long noteId,
-                           @Valid @RequestBody Note noteDetails) {
-
-        Note note = noteRepository.findById(noteId)
-                .orElseThrow(() -> new ResourceNotFoundException("Note", "id", noteId));
-
-        note.setTitle(noteDetails.getTitle());
-        note.setContent(noteDetails.getContent());
-
-        Note updatedNote = noteRepository.save(note);
-        return updatedNote;
+    // Get All Notes
+    @GetMapping("/all")
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
-    // Delete a Note
-    @DeleteMapping("/notes/{id}")
-    public ResponseEntity<?> deleteNote(@PathVariable(value = "id") Long noteId) {
-        Note note = noteRepository.findById(noteId)
-                .orElseThrow(() -> new ResourceNotFoundException("Note", "id", noteId));
-
-        noteRepository.delete(note);
-
-        return ResponseEntity.ok().build();
-    }
 }

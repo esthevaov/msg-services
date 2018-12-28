@@ -14,6 +14,7 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"created", "votes"}, allowGetters = true)
 public class Message implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -29,6 +30,17 @@ public class Message implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date created;
+
+
+    public Message() {
+    }
+
+    public Message(long id, @NotBlank String title, String content) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.votes = 0;
+    }
 
     public long getId() {
         return id;

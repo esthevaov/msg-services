@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
 public class User implements Serializable{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,6 +19,15 @@ public class User implements Serializable{
 
     @NotBlank
     private String password;
+
+
+    public User() {
+    }
+
+    public User(@NotBlank String email, @NotBlank String password) {
+        this.email = email;
+        this.password = password;
+    }
 
     public Long getId() {
         return id;

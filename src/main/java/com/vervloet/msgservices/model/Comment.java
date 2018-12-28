@@ -14,6 +14,7 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"created"}, allowGetters = true)
 public class Comment implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -24,6 +25,15 @@ public class Comment implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date created;
+
+
+    public Comment() {
+    }
+
+    public Comment(String content, Date created) {
+        this.content = content;
+        this.created = created;
+    }
 
     public long getId() {
         return id;
