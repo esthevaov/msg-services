@@ -1,4 +1,4 @@
-package com.vervloet.msgservices.message;
+package com.vervloet.msgservices.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.CreatedDate;
@@ -35,8 +35,7 @@ public class Message implements Serializable {
     public Message() {
     }
 
-    public Message(long id, @NotBlank String title, String content) {
-        this.id = id;
+    public Message(@NotBlank String title, String content) {
         this.title = title;
         this.content = content;
         this.votes = 0;

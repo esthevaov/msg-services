@@ -1,4 +1,4 @@
-package com.vervloet.msgservices.user;
+package com.vervloet.msgservices.domain;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;

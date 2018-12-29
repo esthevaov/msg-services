@@ -1,4 +1,4 @@
-package com.vervloet.msgservices.comment;
+package com.vervloet.msgservices.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.CreatedDate;

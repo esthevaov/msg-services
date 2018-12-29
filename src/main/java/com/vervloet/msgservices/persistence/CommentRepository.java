@@ -1,6 +1,6 @@
-package com.vervloet.msgservices.comment;
+package com.vervloet.msgservices.persistence;
 
-import com.vervloet.msgservices.comment.Comment;
+import com.vervloet.msgservices.domain.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
