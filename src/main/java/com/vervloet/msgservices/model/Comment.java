@@ -8,18 +8,20 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "comments")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"created"}, allowGetters = true)
 public class Comment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id")
     private long id;
 
+    @Column(name = "content")
     private String content;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name= "created", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date created;
