@@ -11,7 +11,7 @@
 	<groupId>com.vervloet</groupId>
 	<artifactId>msg-services</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<email>msg-services</email>
+	<name>msg-services</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
