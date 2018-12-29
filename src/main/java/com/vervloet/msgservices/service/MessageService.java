@@ -1,6 +1,6 @@
 package com.vervloet.msgservices.service;
 
-import com.vervloet.msgservices.domain.Message;
+import com.vervloet.msgservices.model.Message;
 import com.vervloet.msgservices.exception.ResourceNotFoundException;
 import com.vervloet.msgservices.persistence.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;

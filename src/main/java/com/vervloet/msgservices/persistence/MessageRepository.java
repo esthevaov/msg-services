@@ -1,6 +1,6 @@
 package com.vervloet.msgservices.persistence;
 
-import com.vervloet.msgservices.domain.Message;
+import com.vervloet.msgservices.model.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

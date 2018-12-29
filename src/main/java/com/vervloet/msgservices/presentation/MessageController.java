@@ -1,6 +1,6 @@
 package com.vervloet.msgservices.presentation;
 
-import com.vervloet.msgservices.domain.Message;
+import com.vervloet.msgservices.model.Message;
 import com.vervloet.msgservices.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

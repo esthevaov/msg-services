@@ -1,8 +1,10 @@
 package com.vervloet.msgservices.presentation;
 
-import com.vervloet.msgservices.domain.User;
+import com.vervloet.msgservices.model.User;
 import com.vervloet.msgservices.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
@@ -25,21 +27,21 @@ public class UserController {
 
     // Create a new Message
     @PostMapping()
-    public User createUser(@Valid @RequestBody User user) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
 
-        return userService.createUser(user);
+        return new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
     }
 
     @PutMapping("/{id}/change-email")
-    public User updateUserEmail(@RequestBody User user,
+    public ResponseEntity<User> updateUserEmail(@RequestBody User user,
                                 @PathVariable(value = "id") Long userId){
-        return userService.updateUserEmail(user, userId);
+        return new ResponseEntity<>(userService.updateUserEmail(user, userId), HttpStatus.OK);
     }
 
     @PutMapping("/{id}/change-password")
-    public User updateUserPassword(@RequestBody Map<String, String> passwords,
+    public ResponseEntity<User> updateUserPassword(@RequestBody Map<String, String> passwords,
                                    @PathVariable(value = "id") Long userId){
-        return userService.updateUserPassword(passwords, userId);
+        return new ResponseEntity<>(userService.updateUserPassword(passwords, userId), HttpStatus.OK);
     }
 
 }
