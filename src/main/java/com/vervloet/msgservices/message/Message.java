@@ -1,4 +1,4 @@
-package com.vervloet.msgservices.model;
+package com.vervloet.msgservices.message;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.CreatedDate;

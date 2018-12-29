@@ -1,6 +1,6 @@
-package com.vervloet.msgservices.repository;
+package com.vervloet.msgservices.message;
 
-import com.vervloet.msgservices.model.Message;
+import com.vervloet.msgservices.message.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

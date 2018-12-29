@@ -1,10 +1,8 @@
-package com.vervloet.msgservices.controller;
+package com.vervloet.msgservices.message;
 
-import com.vervloet.msgservices.model.User;
-import com.vervloet.msgservices.repository.UserRepository;
-import com.vervloet.msgservices.exception.ResourceNotFoundException;
+import com.vervloet.msgservices.user.User;
+import com.vervloet.msgservices.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
