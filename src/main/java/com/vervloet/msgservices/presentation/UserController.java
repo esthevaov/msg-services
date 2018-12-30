@@ -18,7 +18,6 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -32,25 +31,25 @@ public class UserController {
     }
 
     // Create a new Message
-    @PostMapping()
+    @PostMapping("/create-user")
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
 
         return new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/change-email")
+    @PutMapping("/user/{id}/change-email")
     public ResponseEntity<User> updateUserEmail(@RequestBody User user,
                                 @PathVariable(value = "id") Long userId){
         return new ResponseEntity<>(userService.updateUserEmail(user, userId), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/change-password")
+    @PutMapping("/user/{id}/change-password")
     public ResponseEntity<User> updateUserPassword(@RequestBody Map<String, String> passwords,
                                    @PathVariable(value = "id") Long userId){
         return new ResponseEntity<>(userService.updateUserPassword(passwords, userId), HttpStatus.OK);
     }
 
-    @PostMapping("/logmeout")
+    @PostMapping("/logout")
     public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null){

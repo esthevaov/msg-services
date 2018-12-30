@@ -13,7 +13,7 @@ import java.util.Set;
 public class User implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
     private Long id;
 
@@ -26,13 +26,6 @@ public class User implements Serializable{
     @Column(name = "password")
     private String password;
 
-    @NotBlank
-    @Column(name = "active")
-    private String active;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_comment", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "comment_id"))
-    private Set<Comment> comments;
 
     public User() {
     }
@@ -41,14 +34,8 @@ public class User implements Serializable{
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.id = user.getId();
-        this.active = user.getActive();
-        this.comments = user.getComments();
     }
 
-    public User(@NotBlank String email, @NotBlank String password) {
-        this.email = email;
-        this.password = password;
-    }
 
     public Long getId() {
         return id;
@@ -74,19 +61,5 @@ public class User implements Serializable{
         this.password = password;
     }
 
-    public String getActive() {
-        return active;
-    }
 
-    public void setActive(String active) {
-        this.active = active;
-    }
-
-    public Set<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(Set<Comment> comments) {
-        this.comments = comments;
-    }
 }
