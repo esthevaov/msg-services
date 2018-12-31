@@ -1,10 +1,13 @@
 package com.vervloet.msgservices.service;
 
+import com.vervloet.msgservices.model.CustomUserDetails;
 import com.vervloet.msgservices.model.Message;
 import com.vervloet.msgservices.exception.ResourceNotFoundException;
+import com.vervloet.msgservices.model.User;
 import com.vervloet.msgservices.persistence.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +19,12 @@ public class MessageService {
     private MessageRepository messageRepository;
 
     public Message createMessage(Message message) {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
+
+        message.setUsername(customUserDetails.getUsername());
 
         return messageRepository.save(message);
     }

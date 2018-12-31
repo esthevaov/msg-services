@@ -38,6 +38,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/user/**").authenticated();
 
+        http.authorizeRequests()
+                .antMatchers("/message/**").authenticated();
+
         http.httpBasic().authenticationEntryPoint(authEntryPoint);
     }
 

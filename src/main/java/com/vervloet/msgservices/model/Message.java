@@ -30,7 +30,7 @@ public class Message implements Serializable {
     @CreatedDate
     private Date created;
 
-    private User user;
+    private String username;
 
 
     public Message() {
@@ -84,11 +84,11 @@ public class Message implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    public User getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
