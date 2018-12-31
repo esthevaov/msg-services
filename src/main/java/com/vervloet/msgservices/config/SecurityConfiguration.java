@@ -1,4 +1,4 @@
-package com.vervloet.msgservices.security;
+package com.vervloet.msgservices.config;
 
 import com.vervloet.msgservices.persistence.UserRepository;
 import com.vervloet.msgservices.service.CustomUserDetailsService;
@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -22,8 +21,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-    @Override
+    @Autowired
+    private AuthenticationEntryPoint authEntryPoint;
+
+    @Autowired
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        System.out.println("bbbbbbbbbbbbbbbbbbbbbbb");
 
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(getPasswordEncoder());
@@ -32,11 +35,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaa");
         http.authorizeRequests()
                 .antMatchers("/user/**").authenticated()
-                .anyRequest().permitAll()
-                .and()
-                .formLogin().permitAll();
+                .anyRequest().permitAll();
     }
 
     private PasswordEncoder getPasswordEncoder() {
