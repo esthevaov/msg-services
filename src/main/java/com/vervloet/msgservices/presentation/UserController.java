@@ -1,5 +1,6 @@
 package com.vervloet.msgservices.presentation;
 
+import com.vervloet.msgservices.model.CustomUserDetails;
 import com.vervloet.msgservices.model.User;
 import com.vervloet.msgservices.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,22 @@ public class UserController {
     public List<User> getAllUsers(){
 
         return userService.getAllUsers();
+    }
 
+    @GetMapping("/user")
+    public List<User> getAllUsers2(){
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetails) {
+            String username = ((CustomUserDetails)principal).getUsername();
+            System.out.println("Username: "+ username);
+        } else {
+            String username = principal.toString();
+            System.out.println("Username: "+ username);
+        }
+
+        return userService.getAllUsers();
     }
 
     // Create a new Message

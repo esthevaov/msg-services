@@ -24,9 +24,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationEntryPoint authEntryPoint;
 
-    @Autowired
+    @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        System.out.println("bbbbbbbbbbbbbbbbbbbbbbb");
 
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(getPasswordEncoder());
@@ -35,10 +34,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaa");
+
         http.authorizeRequests()
-                .antMatchers("/user/**").authenticated()
-                .anyRequest().permitAll();
+                .antMatchers("/user/**").authenticated();
+
+        http.httpBasic().authenticationEntryPoint(authEntryPoint);
     }
 
     private PasswordEncoder getPasswordEncoder() {
@@ -50,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
             @Override
             public boolean matches(CharSequence charSequence, String s) {
-                return true;
+                return charSequence.toString().equals(s);
             }
         };
     }
