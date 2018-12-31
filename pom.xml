@@ -11,7 +11,7 @@
 	<groupId>com.vervloet</groupId>
 	<artifactId>msg-services</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<email>msg-services</email>
+	<name>msg-services</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -42,6 +42,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security.oauth</groupId>
+			<artifactId>spring-security-oauth2</artifactId>
 		</dependency>
 	</dependencies>
 

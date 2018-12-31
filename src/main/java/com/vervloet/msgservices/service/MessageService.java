@@ -1,14 +1,12 @@
 package com.vervloet.msgservices.service;
 
-import com.vervloet.msgservices.domain.Message;
+import com.vervloet.msgservices.model.Message;
 import com.vervloet.msgservices.exception.ResourceNotFoundException;
 import com.vervloet.msgservices.persistence.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -17,7 +15,7 @@ public class MessageService {
     @Autowired
     private MessageRepository messageRepository;
 
-    public Message createMessage(@Valid @RequestBody Message message) {
+    public Message createMessage(Message message) {
 
         return messageRepository.save(message);
     }
@@ -29,6 +27,7 @@ public class MessageService {
     }
 
     public Message getMessageById(Long messageId) {
+
         return messageRepository.findById(messageId)
                 .orElseThrow(() -> new ResourceNotFoundException("message", "id", messageId));
     }
