@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/message")
+@RequestMapping("/api/message")
 public class MessageController {
 
     @Autowired
@@ -23,9 +23,9 @@ public class MessageController {
         return messageService.getAllMessages();
     }
 
-    // Get All Notes
-    @GetMapping("/{id}")
-    public Message getMessage(@PathVariable(value = "id") Long messageId) {
+    // Get One Notes
+    @GetMapping("/{messageId}")
+    public Message getMessage(@PathVariable(value = "messageId") Long messageId) {
 
         return messageService.getMessageById(messageId);
     }
@@ -37,11 +37,23 @@ public class MessageController {
         return messageService.createMessage(message);
     }
 
-    // Delete a Note
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteMessage(@PathVariable(value = "id") Long noteId) {
+    @PostMapping("/{messageId}/up")
+    public ResponseEntity upvoteMessage(@PathVariable(value = "messageId") Long messageId) {
 
-        return messageService.deleteMessage(noteId);
+        return messageService.upvoteMessage(messageId);
+    }
+
+    @PostMapping("/{messageId}/down")
+    public ResponseEntity downvoteMessage(@PathVariable(value = "messageId") Long messageId) {
+
+        return messageService.downvoteMessage(messageId);
+    }
+
+    // Delete a Note
+    @DeleteMapping("/{messageId}")
+    public ResponseEntity<?> deleteMessage(@PathVariable(value = "messageId") Long messageId) {
+
+        return messageService.deleteMessage(messageId);
     }
 
 }

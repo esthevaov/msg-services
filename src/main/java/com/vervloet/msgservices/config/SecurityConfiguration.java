@@ -5,6 +5,7 @@ import com.vervloet.msgservices.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,11 +36,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
 
-        http.authorizeRequests()
-                .antMatchers("/user/**").authenticated();
-
-        http.authorizeRequests()
-                .antMatchers("/message/**").authenticated();
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/**")
+                .permitAll()
+                .and()
+                .authorizeRequests()
+                .antMatchers("**/create-user").permitAll()
+                .and()
+                .authorizeRequests().anyRequest().authenticated();
 
         http.httpBasic().authenticationEntryPoint(authEntryPoint);
     }

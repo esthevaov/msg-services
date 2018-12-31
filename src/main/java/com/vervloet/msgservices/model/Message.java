@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 // @JsonIgnoreProperties(value = {"created", "votes"}, allowGetters = true)
 @Entity
@@ -31,6 +32,8 @@ public class Message implements Serializable {
     private Date created;
 
     private String username;
+
+    private List<String> voted;
 
 
     public Message() {
@@ -91,4 +94,25 @@ public class Message implements Serializable {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public List<String> getVoted() {
+
+        return voted;
+    }
+
+    public void setVoted(List<String> voted) {
+
+        this.voted = voted;
+    }
+
+    public void addVoted(String voted) {
+
+        this.voted.add(voted);
+    }
+
+    public boolean checkVoted(String voted) {
+
+        return this.voted.contains(voted);
+    }
+
 }
