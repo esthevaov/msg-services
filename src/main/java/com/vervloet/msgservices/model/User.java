@@ -26,6 +26,9 @@ public class User implements Serializable{
     @Column(name = "password")
     private String password;
 
+    @ElementCollection(targetClass=Message.class)
+    private Set<Message> messages;
+
 
     public User() {
     }
@@ -34,6 +37,7 @@ public class User implements Serializable{
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.id = user.getId();
+        this.messages = user.getMessages();
     }
 
 
@@ -61,5 +65,12 @@ public class User implements Serializable{
         this.password = password;
     }
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    public Set<Message> getMessages() {
+        return messages;
+    }
 
+    public void setMessages(Set<Message> messages) {
+        this.messages = messages;
+    }
 }

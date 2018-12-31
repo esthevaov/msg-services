@@ -8,10 +8,10 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 
+// @JsonIgnoreProperties(value = {"created", "votes"}, allowGetters = true)
 @Entity
 @Table(name = "message")
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"created", "votes"}, allowGetters = true)
 public class Message implements Serializable {
 
     @Id
@@ -29,6 +29,8 @@ public class Message implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date created;
+
+    private User user;
 
 
     public Message() {
@@ -78,5 +80,15 @@ public class Message implements Serializable {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
