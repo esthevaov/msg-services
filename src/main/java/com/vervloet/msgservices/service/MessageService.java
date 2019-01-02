@@ -1,12 +1,12 @@
 package com.vervloet.msgservices.service;
 
-import com.vervloet.msgservices.model.CustomUserDetails;
-import com.vervloet.msgservices.model.Message;
-import com.vervloet.msgservices.exception.ResourceNotFoundException;
-import com.vervloet.msgservices.model.User;
-import com.vervloet.msgservices.persistence.MessageRepository;
+import com.vervloet.msgservices.domain.model.CustomUserDetails;
+import com.vervloet.msgservices.domain.model.Message;
+import com.vervloet.msgservices.domain.exceptions.ResourceNotFoundException;
+import com.vervloet.msgservices.domain.model.User;
+import com.vervloet.msgservices.repository.MessageRepository;
+import com.vervloet.msgservices.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,13 +19,18 @@ public class MessageService {
     @Autowired
     private MessageRepository messageRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public Message createMessage(Message message) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
 
-        message.setUsername(customUserDetails.getUsername());
+        User user = userRepository.findByEmail(customUserDetails.getUsername());
+
+        message.setUser(user);
 
         return messageRepository.save(message);
     }
@@ -42,7 +47,7 @@ public class MessageService {
                 .orElseThrow(() -> new ResourceNotFoundException("message", "id", messageId));
     }
 
-    public ResponseEntity<?> upvoteMessage(Long messageId) {
+    /*public ResponseEntity<?> upvoteMessage(Long messageId) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -84,7 +89,7 @@ public class MessageService {
 
             return ResponseEntity.ok().build();
         }
-    }
+    }*/
 
     public ResponseEntity<?> deleteMessage(Long messageId) {
 
@@ -95,13 +100,17 @@ public class MessageService {
         Message message = messageRepository.findById(messageId)
                 .orElseThrow(() -> new ResourceNotFoundException("Message", "id", messageId));
 
-        if( message.getUsername().equals(customUserDetails.getUsername())){
+        messageRepository.delete(message);
+
+        return ResponseEntity.ok().build();
+    }
+/*        if( message.getUsername().equals(customUserDetails.getUsername())){
             messageRepository.delete(message);
         } else {
             return new ResponseEntity<>("Nao Autorizado", HttpStatus.UNAUTHORIZED);
         }
 
         return ResponseEntity.ok().build();
-    }
+    }*/
 
 }

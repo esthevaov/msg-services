@@ -1,8 +1,8 @@
 package com.vervloet.msgservices.service;
 
-import com.vervloet.msgservices.model.CustomUserDetails;
-import com.vervloet.msgservices.model.User;
-import com.vervloet.msgservices.persistence.UserRepository;
+import com.vervloet.msgservices.domain.model.CustomUserDetails;
+import com.vervloet.msgservices.domain.model.User;
+import com.vervloet.msgservices.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

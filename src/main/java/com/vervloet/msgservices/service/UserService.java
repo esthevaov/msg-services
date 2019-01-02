@@ -1,8 +1,8 @@
 package com.vervloet.msgservices.service;
 
-import com.vervloet.msgservices.model.User;
-import com.vervloet.msgservices.exception.ResourceNotFoundException;
-import com.vervloet.msgservices.persistence.UserRepository;
+import com.vervloet.msgservices.domain.model.User;
+import com.vervloet.msgservices.domain.exceptions.ResourceNotFoundException;
+import com.vervloet.msgservices.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
