@@ -1,12 +1,15 @@
 package com.vervloet.msgservices.service;
 
+import antlr.debug.MessageAdapter;
 import com.vervloet.msgservices.domain.model.CustomUserDetails;
 import com.vervloet.msgservices.domain.model.Message;
 import com.vervloet.msgservices.domain.exceptions.ResourceNotFoundException;
 import com.vervloet.msgservices.domain.model.User;
+import com.vervloet.msgservices.mapper.MessageMapper;
 import com.vervloet.msgservices.repository.MessageRepository;
 import com.vervloet.msgservices.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,7 +25,7 @@ public class MessageService {
     @Autowired
     private UserRepository userRepository;
 
-    public Message createMessage(Message message) {
+    public ResponseEntity<?> createMessage(Message message) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -32,19 +35,21 @@ public class MessageService {
 
         message.setUser(user);
 
-        return messageRepository.save(message);
+        Message savedMessage = messageRepository.save(message);
+
+        return new ResponseEntity<>(MessageMapper.mapDomainToVo(savedMessage), HttpStatus.OK);
     }
 
-    public List<Message> getAllMessages() {
+    public ResponseEntity<?> getAllMessages() {
 
-        return messageRepository.findAll();
+        return new ResponseEntity<>(messageRepository.findAll(), HttpStatus.OK);
 
     }
 
-    public Message getMessageById(Long messageId) {
+    public ResponseEntity<?> getMessageById(Long messageId) {
 
-        return messageRepository.findById(messageId)
-                .orElseThrow(() -> new ResourceNotFoundException("message", "id", messageId));
+        return new ResponseEntity<>(messageRepository.findById(messageId)
+                .orElseThrow(() -> new ResourceNotFoundException("message", "id", messageId)), HttpStatus.OK);
     }
 
     /*public ResponseEntity<?> upvoteMessage(Long messageId) {

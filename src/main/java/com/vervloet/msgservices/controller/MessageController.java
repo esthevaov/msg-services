@@ -18,21 +18,21 @@ public class MessageController {
 
     // Get All Notes
     @GetMapping()
-    public List<Message> getAllMessages() {
+    public ResponseEntity<?> getAllMessages() {
 
         return messageService.getAllMessages();
     }
 
     // Get One Notes
     @GetMapping("/{messageId}")
-    public Message getMessage(@PathVariable(value = "messageId") Long messageId) {
+    public ResponseEntity<?> getMessage(@PathVariable(value = "messageId") Long messageId) {
 
         return messageService.getMessageById(messageId);
     }
 
     // Create a new Message
     @PostMapping()
-    public Message createMessage(@Valid @RequestBody Message message) {
+    public ResponseEntity<?> createMessage(@Valid @RequestBody Message message) {
 
         return messageService.createMessage(message);
     }

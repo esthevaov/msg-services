@@ -14,7 +14,7 @@ import java.util.Date;
 @Entity
 @Table(name = "messages")
 @EntityListeners(AuditingEntityListener.class)
-public class Message implements Serializable {
+public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +33,6 @@ public class Message implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date created;
-
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

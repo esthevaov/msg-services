@@ -1,7 +1,9 @@
 package com.vervloet.msgservices.controller;
 
+import com.vervloet.msgservices.domain.exceptions.ResourceNotFoundException;
 import com.vervloet.msgservices.domain.model.User;
 import com.vervloet.msgservices.domain.vo.UserVo;
+import com.vervloet.msgservices.repository.UserRepository;
 import com.vervloet.msgservices.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping()
     public List<User> getAllUsers(){
@@ -47,6 +52,14 @@ public class UserController {
     public ResponseEntity<?> updateUserPassword(@RequestBody Map<String, String> passwords,
                                    @PathVariable(value = "id") Long userId){
         return userService.updateUserPassword(passwords, userId);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable(value = "id") Long userId) {
+
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+        userRepository.delete(user);
     }
 
     @PostMapping("/logout")

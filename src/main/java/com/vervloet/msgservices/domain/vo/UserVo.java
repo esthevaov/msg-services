@@ -12,9 +12,9 @@ public class UserVo extends BaseJsonApiModel {
 
   @JsonProperty(value = "user_id", access = Access.READ_ONLY)
   private Long id;
-  @JsonProperty(value = "email", access = JsonProperty.Access.WRITE_ONLY)
+  @JsonProperty(value = "email")
   private String email;
-  @JsonProperty(value = "password", access = JsonProperty.Access.WRITE_ONLY)
+  @JsonProperty(value = "password")
   private String password;
   @JsonProperty(value = "messages_ids")
   private List<Long> messagesIds;

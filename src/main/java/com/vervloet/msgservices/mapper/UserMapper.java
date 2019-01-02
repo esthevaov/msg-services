@@ -3,6 +3,7 @@ package com.vervloet.msgservices.mapper;
 import com.vervloet.msgservices.domain.model.Message;
 import com.vervloet.msgservices.domain.model.User;
 import com.vervloet.msgservices.domain.vo.UserVo;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,10 +27,14 @@ public class UserMapper {
         .withPassword(user.getPassword())
         .withMessagesIds(mapMessagesToMessagesIds(user.getMessages()))
         .build();
-
   }
 
   public  static List<Long> mapMessagesToMessagesIds(List<Message> messages) {
-    return messages.stream().map(Message::getId).collect(Collectors.toList());
+    System.out.println(messages.getClass().getName());
+    if(!messages.isEmpty()) {
+      return messages.stream().map(Message::getId).collect(Collectors.toList());
+    } else {
+      return new ArrayList<Long>();
+    }
   }
 }
