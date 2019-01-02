@@ -1,6 +1,8 @@
 package com.vervloet.msgservices.domain.model;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -30,7 +32,7 @@ public class User implements Serializable{
     @OneToMany(cascade = CascadeType.ALL,
         fetch = FetchType.LAZY,
         mappedBy = "user")
-    private Set<Message> messages = new HashSet<>();
+    private List<Message> messages;
 
 
     public User() {
@@ -43,6 +45,16 @@ public class User implements Serializable{
         this.messages = user.getMessages();
     }
 
+    public User(Builder builder) {
+        Optional.ofNullable(builder.id).ifPresent(this::setId);
+        Optional.ofNullable(builder.email).ifPresent(this::setEmail);
+        Optional.ofNullable(builder.password).ifPresent(this::setPassword);
+        Optional.ofNullable(builder.messages).ifPresent(this::setMessages);
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public Long getId() {
         return id;
@@ -69,11 +81,44 @@ public class User implements Serializable{
     }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    public Set<Message> getMessages() {
+    public List<Message> getMessages() {
         return messages;
     }
 
-    public void setMessages(Set<Message> messages) {
+    public void setMessages(List<Message> messages) {
         this.messages = messages;
+    }
+
+    public static final class Builder {
+
+        private Long id;
+        private String email;
+        private String password;
+        private List<Message> messages;
+
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder withMessages(List<Message> messages) {
+            this.messages = messages;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
+
     }
 }
