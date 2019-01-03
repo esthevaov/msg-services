@@ -42,6 +42,18 @@ public class UserController {
         return userService.createUser(user);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUser(@PathVariable(value = "id") Long userId) {
+
+        return userService.getUser(userId);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable(value = "id") Long userId) {
+
+        return userService.deleteUser(userId);
+    }
+
     @PutMapping("/{id}/change-email")
     public ResponseEntity<?> updateUserEmail(@RequestBody User user,
                                 @PathVariable(value = "id") Long userId){
@@ -52,17 +64,6 @@ public class UserController {
     public ResponseEntity<?> updateUserPassword(@RequestBody Map<String, String> passwords,
                                    @PathVariable(value = "id") Long userId){
         return userService.updateUserPassword(passwords, userId);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable(value = "id") Long userId) {
-        System.out.println("User: ");
-
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
-        System.out.println(user);
-        userRepository.delete(user);
-        return  new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/logout")

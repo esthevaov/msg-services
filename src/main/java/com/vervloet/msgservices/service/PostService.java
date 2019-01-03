@@ -53,8 +53,10 @@ public class PostService {
 
     public ResponseEntity<?> getPostById(Long postId) {
 
-        return new ResponseEntity<>(postRepository.findById(postId)
-                .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId)), HttpStatus.OK);
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));
+
+        return new ResponseEntity<>(PostMapper.mapDomainToVo(post), HttpStatus.OK);
     }
 
     /*public ResponseEntity<?> upvoteMessage(Long messageId) {
@@ -112,11 +114,12 @@ public class PostService {
 
         if( post.getUser().getEmail().equals(customUserDetails.getUsername())){
             postRepository.delete(post);
+            return new ResponseEntity<>("Post Deleted", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Nao Autorizado", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Action not authorized for this user", HttpStatus.UNAUTHORIZED);
         }
 
-        return new ResponseEntity<>("Post deletado", HttpStatus.OK);
+
     }
 
 }
