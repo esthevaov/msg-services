@@ -7,17 +7,23 @@ import com.vervloet.msgservices.domain.vo.jsonapi.BaseJsonApiModel;
 import java.util.List;
 import java.util.Optional;
 
-@JsonPropertyOrder(value = {"user_id", "email", "password", "message_id"})
+@JsonPropertyOrder(value = {"user_id", "email", "password", "posts_id", "comments_ids"})
 public class UserVo extends BaseJsonApiModel {
 
   @JsonProperty(value = "user_id", access = Access.READ_ONLY)
   private Long id;
+
   @JsonProperty(value = "email")
   private String email;
+
   @JsonProperty(value = "password")
   private String password;
-  @JsonProperty(value = "messages_ids")
-  private List<Long> messagesIds;
+
+  @JsonProperty(value = "posts_ids")
+  private List<Long> postsIds;
+
+  @JsonProperty(value = "comments_ids")
+  private List<Long> commentsIds;
 
   public UserVo() {
   }
@@ -26,7 +32,8 @@ public class UserVo extends BaseJsonApiModel {
     Optional.ofNullable(builder.id).ifPresent(this::setId);
     Optional.ofNullable(builder.email).ifPresent(this::setEmail);
     Optional.ofNullable(builder.password).ifPresent(this::setPassword);
-    Optional.ofNullable(builder.messagesIds).ifPresent(this::setMessagesIds);
+    Optional.ofNullable(builder.postsIds).ifPresent(this::setPostsIds);
+    Optional.ofNullable(builder.commentsIds).ifPresent(this::setCommentsIds);
   }
 
   public static Builder builder() {
@@ -57,12 +64,20 @@ public class UserVo extends BaseJsonApiModel {
     this.password = password;
   }
 
-  public List<Long> getMessagesIds() {
-    return messagesIds;
+  public List<Long> getPostsIds() {
+    return postsIds;
   }
 
-  public void setMessagesIds(List<Long> messagesIds) {
-    this.messagesIds = messagesIds;
+  public void setPostsIds(List<Long> postsIds) {
+    this.postsIds = postsIds;
+  }
+
+  public List<Long> getCommentsIds() {
+    return commentsIds;
+  }
+
+  public void setCommentsIds(List<Long> commentsIds) {
+    this.commentsIds = commentsIds;
   }
 
   @Override
@@ -80,7 +95,8 @@ public class UserVo extends BaseJsonApiModel {
     private Long id;
     private String email;
     private String password;
-    private List<Long> messagesIds;
+    private List<Long> postsIds;
+    private List<Long> commentsIds;
 
     public Builder withId(Long id) {
       this.id = id;
@@ -97,8 +113,13 @@ public class UserVo extends BaseJsonApiModel {
       return this;
     }
 
-    public Builder withMessagesIds(List<Long> messagesIds) {
-      this.messagesIds = messagesIds;
+    public Builder withPostsIds(List<Long> postsIds) {
+      this.postsIds = postsIds;
+      return this;
+    }
+
+    public Builder withCommentsIds(List<Long> commentsIds) {
+      this.commentsIds = commentsIds;
       return this;
     }
 

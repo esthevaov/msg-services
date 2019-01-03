@@ -1,6 +1,5 @@
 package com.vervloet.msgservices.domain.model;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -8,7 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -32,8 +30,12 @@ public class User implements Serializable{
     @OneToMany(cascade = CascadeType.ALL,
         fetch = FetchType.LAZY,
         mappedBy = "user")
-    private List<Message> messages;
+    private List<Post> posts;
 
+    @OneToMany(cascade = CascadeType.ALL,
+        fetch = FetchType.LAZY,
+        mappedBy = "user")
+    private List<Comment> comments;
 
     public User() {
     }
@@ -42,14 +44,16 @@ public class User implements Serializable{
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.id = user.getId();
-        this.messages = user.getMessages();
+        this.posts = user.getPosts();
+        this.comments = user.getComments();
     }
 
     public User(Builder builder) {
         Optional.ofNullable(builder.id).ifPresent(this::setId);
         Optional.ofNullable(builder.email).ifPresent(this::setEmail);
         Optional.ofNullable(builder.password).ifPresent(this::setPassword);
-        Optional.ofNullable(builder.messages).ifPresent(this::setMessages);
+        Optional.ofNullable(builder.posts).ifPresent(this::setPosts);
+        Optional.ofNullable(builder.comments).ifPresent(this::setComments);
     }
 
     public static Builder builder() {
@@ -80,21 +84,30 @@ public class User implements Serializable{
         this.password = password;
     }
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    public List<Message> getMessages() {
-        return messages;
+    public List<Post> getPosts() {
+        return posts;
     }
 
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
 
     public static final class Builder {
 
         private Long id;
         private String email;
         private String password;
-        private List<Message> messages;
+        private List<Post> posts;
+        private List<Comment> comments;
 
         public Builder withId(Long id) {
             this.id = id;
@@ -111,8 +124,13 @@ public class User implements Serializable{
             return this;
         }
 
-        public Builder withMessages(List<Message> messages) {
-            this.messages = messages;
+        public Builder withPosts(List<Post> posts) {
+            this.posts = posts;
+            return this;
+        }
+
+        public Builder withComments(List<Comment> comments) {
+            this.comments = comments;
             return this;
         }
 

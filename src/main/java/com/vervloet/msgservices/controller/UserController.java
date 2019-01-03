@@ -35,7 +35,7 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    // Create a new Message
+    // Create a new Post
     @PostMapping("/create-user")
     public ResponseEntity<UserVo> createUser(@Valid @RequestBody User user) {
 
@@ -55,11 +55,14 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable(value = "id") Long userId) {
+    public ResponseEntity<?> deleteUser(@PathVariable(value = "id") Long userId) {
+        System.out.println("User: ");
 
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+        System.out.println(user);
         userRepository.delete(user);
+        return  new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/logout")
