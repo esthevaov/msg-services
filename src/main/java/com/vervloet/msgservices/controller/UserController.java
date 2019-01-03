@@ -1,6 +1,9 @@
 package com.vervloet.msgservices.controller;
 
+import com.vervloet.msgservices.domain.exceptions.ResourceNotFoundException;
 import com.vervloet.msgservices.domain.model.User;
+import com.vervloet.msgservices.domain.vo.UserVo;
+import com.vervloet.msgservices.repository.UserRepository;
 import com.vervloet.msgservices.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,29 +26,43 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping()
     public List<User> getAllUsers(){
 
         return userService.getAllUsers();
     }
 
-    // Create a new Message
+    // Create a new Post
     @PostMapping("/create-user")
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+    public ResponseEntity<UserVo> createUser(@Valid @RequestBody User user) {
 
-        return new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
+        return userService.createUser(user);
     }
 
     @PutMapping("/{id}/change-email")
-    public ResponseEntity<User> updateUserEmail(@RequestBody User user,
+    public ResponseEntity<?> updateUserEmail(@RequestBody User user,
                                 @PathVariable(value = "id") Long userId){
-        return new ResponseEntity<>(userService.updateUserEmail(user, userId), HttpStatus.OK);
+        return userService.updateUserEmail(user, userId);
     }
 
     @PutMapping("/{id}/change-password")
-    public ResponseEntity<User> updateUserPassword(@RequestBody Map<String, String> passwords,
+    public ResponseEntity<?> updateUserPassword(@RequestBody Map<String, String> passwords,
                                    @PathVariable(value = "id") Long userId){
-        return new ResponseEntity<>(userService.updateUserPassword(passwords, userId), HttpStatus.OK);
+        return userService.updateUserPassword(passwords, userId);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable(value = "id") Long userId) {
+        System.out.println("User: ");
+
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+        System.out.println(user);
+        userRepository.delete(user);
+        return  new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/logout")
