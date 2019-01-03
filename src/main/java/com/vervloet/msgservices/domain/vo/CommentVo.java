@@ -10,7 +10,7 @@ import java.util.Date;
 public class CommentVo extends BaseJsonApiModel {
 
   @JsonProperty(value = "id")
-  private long id;
+  private Long id;
 
   @JsonProperty(value = "content")
   private String content;
@@ -44,7 +44,7 @@ public class CommentVo extends BaseJsonApiModel {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -99,7 +99,7 @@ public class CommentVo extends BaseJsonApiModel {
     private Long postId;
     private Long userId;
 
-    public Builder withId(long id) {
+    public Builder withId(Long id) {
       this.id = id;
       return this;
     }

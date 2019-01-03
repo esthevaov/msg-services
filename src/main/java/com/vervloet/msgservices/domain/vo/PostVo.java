@@ -53,7 +53,7 @@ public class PostVo extends BaseJsonApiModel {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -77,7 +77,7 @@ public class PostVo extends BaseJsonApiModel {
     return votes;
   }
 
-  public void setVotes(long votes) {
+  public void setVotes(Long votes) {
     this.votes = votes;
   }
 
@@ -125,7 +125,7 @@ public class PostVo extends BaseJsonApiModel {
     private Long userId;
     private List<Long> commentsIds;
 
-    public Builder withId(long id) {
+    public Builder withId(Long id) {
       this.id = id;
       return this;
     }

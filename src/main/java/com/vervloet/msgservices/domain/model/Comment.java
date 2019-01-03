@@ -15,7 +15,7 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
-    private long id;
+    private Long id;
 
     @Size(max = 1000)
     @Column(name = "content")
@@ -54,11 +54,11 @@ public class Comment {
         return new Builder();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -102,7 +102,7 @@ public class Comment {
         private Post post;
         private User user;
 
-        public Builder withId(long id) {
+        public Builder withId(Long id) {
             this.id = id;
             return this;
         }

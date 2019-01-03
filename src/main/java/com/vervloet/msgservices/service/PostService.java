@@ -4,9 +4,12 @@ import com.vervloet.msgservices.domain.model.CustomUserDetails;
 import com.vervloet.msgservices.domain.model.Post;
 import com.vervloet.msgservices.domain.exceptions.ResourceNotFoundException;
 import com.vervloet.msgservices.domain.model.User;
+import com.vervloet.msgservices.domain.vo.PostVo;
 import com.vervloet.msgservices.mapper.PostMapper;
 import com.vervloet.msgservices.repository.PostRepository;
 import com.vervloet.msgservices.repository.UserRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +42,12 @@ public class PostService {
 
     public ResponseEntity<?> getAllPosts() {
 
-        return new ResponseEntity<>(postRepository.findAll(), HttpStatus.OK);
+        List<Post> allPosts = postRepository.findAll();
+
+        List<PostVo> allPostsVo = allPosts.stream().map(n -> PostMapper.mapDomainToVo(n))
+            .collect(Collectors.toList());
+
+        return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
 
     }
 
@@ -102,17 +110,13 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
 
-        postRepository.delete(post);
-
-        return ResponseEntity.ok().build();
-    }
-/*        if( message.getUsername().equals(customUserDetails.getUsername())){
-            postRepository.delete(message);
+        if( post.getUser().getEmail().equals(customUserDetails.getUsername())){
+            postRepository.delete(post);
         } else {
             return new ResponseEntity<>("Nao Autorizado", HttpStatus.UNAUTHORIZED);
         }
 
-        return ResponseEntity.ok().build();
-    }*/
+        return new ResponseEntity<>("Post deletado", HttpStatus.OK);
+    }
 
 }

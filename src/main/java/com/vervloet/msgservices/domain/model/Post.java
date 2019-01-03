@@ -3,6 +3,7 @@ package com.vervloet.msgservices.domain.model;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.constraints.Size;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
@@ -25,7 +26,7 @@ public class Post {
     @Size(max = 1000)
     private String content;
 
-    private Long votes;
+    private Long votes = 0L;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -43,12 +44,6 @@ public class Post {
 
 
     public Post() {
-    }
-
-    public Post(@NotBlank String title, String content) {
-        this.title = title;
-        this.content = content;
-        this.votes = 0L;
     }
 
     public Post(Builder builder) {
@@ -69,7 +64,7 @@ public class Post {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -93,7 +88,7 @@ public class Post {
         return votes;
     }
 
-    public void setVotes(long votes) {
+    public void setVotes(Long votes) {
         this.votes = votes;
     }
 
@@ -131,7 +126,7 @@ public class Post {
         private User user;
         private List<Comment> comments;
 
-        public Builder withId(long id) {
+        public Builder withId(Long id) {
             this.id = id;
             return this;
         }

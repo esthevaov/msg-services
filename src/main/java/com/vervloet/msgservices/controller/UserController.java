@@ -30,14 +30,14 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping()
-    public List<User> getAllUsers(){
+    public ResponseEntity<?> getAllUsers(){
 
         return userService.getAllUsers();
     }
 
     // Create a new Post
     @PostMapping("/create-user")
-    public ResponseEntity<UserVo> createUser(@Valid @RequestBody User user) {
+    public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
 
         return userService.createUser(user);
     }

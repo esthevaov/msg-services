@@ -5,6 +5,8 @@ import com.vervloet.msgservices.domain.exceptions.ResourceNotFoundException;
 import com.vervloet.msgservices.domain.vo.UserVo;
 import com.vervloet.msgservices.mapper.UserMapper;
 import com.vervloet.msgservices.repository.UserRepository;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +21,26 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<User> getAllUsers(){
+    public ResponseEntity<?> getAllUsers(){
 
-        return userRepository.findAll();
+        List<User> allUsers = userRepository.findAll();
+
+        List<UserVo> allUsersVo = allUsers.stream().map(n -> UserMapper.mapDomainToVo(n))
+            .collect(Collectors.toList());
+
+        return new ResponseEntity<>(allUsersVo, HttpStatus.OK);
     }
 
-    public ResponseEntity<UserVo> createUser(User user) {
+    public ResponseEntity<?> createUser(User user) {
 
-        User savedUser = userRepository.save(user);
+        if(!Optional.ofNullable(userRepository.findByEmail(user.getEmail())).isPresent()) {
 
-        return new ResponseEntity<>(UserMapper.mapDomainToVo(savedUser), HttpStatus.OK);
+            User savedUser = userRepository.save(user);
+
+            return new ResponseEntity<>(UserMapper.mapDomainToVo(savedUser), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("E-mail ja cadastrado", HttpStatus.CONFLICT);
+        }
     }
 
     public ResponseEntity<?> updateUserEmail(User userChange, Long userId){
