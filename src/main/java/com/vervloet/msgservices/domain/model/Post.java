@@ -1,6 +1,8 @@
 package com.vervloet.msgservices.domain.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,6 +44,10 @@ public class Post {
         mappedBy = "post")
     private List<Comment> comments;
 
+    @OneToMany(cascade = CascadeType.ALL,
+        fetch = FetchType.LAZY,
+        mappedBy = "post")
+    private List<Vote> votedList;
 
     public Post() {
     }
@@ -54,6 +60,7 @@ public class Post {
         Optional.ofNullable(builder.created).ifPresent(this::setCreated);
         Optional.ofNullable(builder.user).ifPresent(this::setUser);
         Optional.ofNullable(builder.comments).ifPresent(this::setComments);
+        Optional.ofNullable(builder.votedList).ifPresent(this::setVotedList);
     }
 
     public static Builder builder() {
@@ -116,6 +123,14 @@ public class Post {
         this.comments = comments;
     }
 
+    public List<Vote> getVotedList() {
+        return votedList;
+    }
+
+    public void setVotedList(List<Vote> votedList) {
+        this.votedList = votedList;
+    }
+
     public static final class Builder {
 
         private Long id;
@@ -125,6 +140,7 @@ public class Post {
         private Date created;
         private User user;
         private List<Comment> comments;
+        private List<Vote> votedList;
 
         public Builder withId(Long id) {
             this.id = id;
@@ -158,6 +174,11 @@ public class Post {
 
         public Builder withComments(List<Comment> comments) {
             this.comments = comments;
+            return this;
+        }
+
+        public Builder withVotedList(List<Vote> votedList) {
+            this.votedList = votedList;
             return this;
         }
 

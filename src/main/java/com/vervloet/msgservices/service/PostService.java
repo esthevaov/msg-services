@@ -4,11 +4,13 @@ import com.vervloet.msgservices.domain.model.CustomUserDetails;
 import com.vervloet.msgservices.domain.model.Post;
 import com.vervloet.msgservices.domain.exceptions.ResourceNotFoundException;
 import com.vervloet.msgservices.domain.model.User;
+import com.vervloet.msgservices.domain.model.Vote;
 import com.vervloet.msgservices.domain.vo.PostVo;
 import com.vervloet.msgservices.mapper.PostMapper;
 import com.vervloet.msgservices.repository.PostRepository;
 import com.vervloet.msgservices.repository.UserRepository;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,26 +61,34 @@ public class PostService {
         return new ResponseEntity<>(PostMapper.mapDomainToVo(post), HttpStatus.OK);
     }
 
-    /*public ResponseEntity<?> upvoteMessage(Long messageId) {
+    public ResponseEntity<?> upvoteMessage(Long messageId) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
 
+        User user = userRepository.findByEmail(customUserDetails.getUsername());
+
         Post message = postRepository.findById(messageId)
                 .orElseThrow(() -> new ResourceNotFoundException("message", "id", messageId));
 
-        if(message.checkVoted(customUserDetails.getUsername())){
+        List<Vote> votedList = message.getVotedList();
 
-            return new ResponseEntity<>("Ja votado", HttpStatus.FORBIDDEN);
-
+        if (!votedList.(user.getId())){
+            votedMap.put(user.getId(), true);
+            message.setVotedMap(votedMap);
+            message.setVotes(message.getVotes()+1L);
         } else {
-
-            message.setVotes(message.getVotes() + 1L);
-            message.addVoted(customUserDetails.getUsername());
-
-            return ResponseEntity.ok().build();
+            if (votedMap.get(user.getId())){
+                return new ResponseEntity<>("Already Upvoted", HttpStatus.CONFLICT);
+            } else {
+                votedMap.replace(user.getId(),true);
+                message.setVotedMap(votedMap);
+                message.setVotes(message.getVotes()+2L);
+            }
         }
+
+        return new ResponseEntity<>("Upvoted Successfully", HttpStatus.OK);
     }
 
     public ResponseEntity<?> downvoteMessage(Long messageId) {
@@ -87,21 +97,29 @@ public class PostService {
 
         CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
 
+        User user = userRepository.findByEmail(customUserDetails.getUsername());
+
         Post message = postRepository.findById(messageId)
-                .orElseThrow(() -> new ResourceNotFoundException("message", "id", messageId));
+            .orElseThrow(() -> new ResourceNotFoundException("message", "id", messageId));
 
-        if(message.checkVoted(customUserDetails.getUsername())){
+        Map<Long,Boolean> votedMap = message.getVotedMap();
 
-            return new ResponseEntity<>("Ja votado", HttpStatus.FORBIDDEN);
-
+        if (!votedMap.containsKey(user.getId())){
+            votedMap.put(user.getId(), false);
+            message.setVotedMap(votedMap);
+            message.setVotes(message.getVotes()-1L);
         } else {
-
-            message.setVotes(message.getVotes() - 1L);
-            message.addVoted(customUserDetails.getUsername());
-
-            return ResponseEntity.ok().build();
+            if (!votedMap.get(user.getId())){
+                return new ResponseEntity<>("Already Downvoted", HttpStatus.CONFLICT);
+            } else {
+                votedMap.replace(user.getId(),false);
+                message.setVotedMap(votedMap);
+                message.setVotes(message.getVotes()-2L);
+            }
         }
-    }*/
+
+        return new ResponseEntity<>("Downvoted Successfully", HttpStatus.OK);
+    }
 
     public ResponseEntity<?> deletePost(Long postId) {
 

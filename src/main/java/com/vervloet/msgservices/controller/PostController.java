@@ -36,7 +36,7 @@ public class PostController {
         return postService.createPost(post);
     }
 
-    /*@PostMapping("/{messageId}/up")
+    @PostMapping("/{messageId}/up")
     public ResponseEntity upvoteMessage(@PathVariable(value = "messageId") Long messageId) {
 
         return postService.upvoteMessage(messageId);
@@ -48,12 +48,6 @@ public class PostController {
         return postService.downvoteMessage(messageId);
     }
 
-    // Delete a Note
-    @DeleteMapping("/{messageId}")
-    public ResponseEntity<?> deleteMessage(@PathVariable(value = "messageId") Long messageId) {
-
-        return postService.deleteMessage(messageId);
-    }*/
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable(value = "postId") Long postId) {
