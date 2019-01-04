@@ -43,12 +43,13 @@ public class UserService {
 
     public ResponseEntity<?> createUser(User user) {
 
-        if(!Optional.ofNullable(userRepository.findByEmail(user.getEmail())).isPresent()) {
+        if(!userRepository.findByEmail(user.getEmail()).isPresent()) {
 
             User savedUser = userRepository.save(user);
 
             return new ResponseEntity<>(UserMapper.mapDomainToVo(savedUser), HttpStatus.OK);
         } else {
+
             return new ResponseEntity<>("E-mail already registered", HttpStatus.CONFLICT);
         }
     }
@@ -64,8 +65,10 @@ public class UserService {
         if(user.getEmail().equals(customUserDetails.getUsername())) {
 
             userRepository.delete(user);
+
             return  new ResponseEntity<>("User Deleted", HttpStatus.OK);
         } else {
+
             return  new ResponseEntity<>("Action not authorized for this user", HttpStatus.UNAUTHORIZED);
         }
 

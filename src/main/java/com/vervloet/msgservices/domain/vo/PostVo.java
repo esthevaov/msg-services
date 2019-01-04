@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-@JsonPropertyOrder(value = {"id", "title", "content", "votes", "created", "user_id", "comments_ids"})
+@JsonPropertyOrder(value = {"id", "title", "content", "votes", "created", "user_id", "comments"})
 public class PostVo extends BaseJsonApiModel {
 
   @JsonProperty(value = "id")
@@ -28,8 +28,8 @@ public class PostVo extends BaseJsonApiModel {
   @JsonProperty(value = "user_id")
   private Long userId;
 
-  @JsonProperty(value = "comments_ids")
-  private List<Long> commentsIds;
+  @JsonProperty(value = "comments")
+  private List<CommentVo> commentsVos;
 
 
   public PostVo() {
@@ -42,7 +42,7 @@ public class PostVo extends BaseJsonApiModel {
     Optional.ofNullable(builder.votes).ifPresent(this::setVotes);
     Optional.ofNullable(builder.created).ifPresent(this::setCreated);
     Optional.ofNullable(builder.userId).ifPresent(this::setUserId);
-    Optional.ofNullable(builder.commentsIds).ifPresent(this::setCommentsIds);
+    Optional.ofNullable(builder.commentsVos).ifPresent(this::setCommentsVos);
   }
 
   public static Builder builder() {
@@ -97,12 +97,12 @@ public class PostVo extends BaseJsonApiModel {
     this.userId = userId;
   }
 
-  public List<Long> getCommentsIds() {
-    return commentsIds;
+  public List<CommentVo> getCommentsVos() {
+    return commentsVos;
   }
 
-  public void setCommentsIds(List<Long> commentsIds) {
-    this.commentsIds = commentsIds;
+  public void setCommentsVos(List<CommentVo> commentsVos) {
+    this.commentsVos = commentsVos;
   }
 
   @Override
@@ -123,7 +123,7 @@ public class PostVo extends BaseJsonApiModel {
     private Long votes;
     private Date created;
     private Long userId;
-    private List<Long> commentsIds;
+    private List<CommentVo> commentsVos;
 
     public Builder withId(Long id) {
       this.id = id;
@@ -155,8 +155,8 @@ public class PostVo extends BaseJsonApiModel {
       return this;
     }
 
-    public Builder withCommentsIds(List<Long> commentsIds) {
-      this.commentsIds = commentsIds;
+    public Builder withCommentsVos(List<CommentVo> commentsVos) {
+      this.commentsVos = commentsVos;
       return this;
     }
 

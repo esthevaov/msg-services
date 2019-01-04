@@ -2,6 +2,7 @@ package com.vervloet.msgservices.mapper;
 
 import com.vervloet.msgservices.domain.model.Comment;
 import com.vervloet.msgservices.domain.model.Post;
+import com.vervloet.msgservices.domain.vo.CommentVo;
 import com.vervloet.msgservices.domain.vo.PostVo;
 import java.util.Collections;
 import java.util.List;
@@ -31,13 +32,13 @@ public class PostMapper {
         .withCreated(post.getCreated())
         .withVotes(post.getVotes())
         .withUserId(post.getUser().getId())
-        .withCommentsIds(mapCommentsToCommentsIds(post.getComments()))
+        .withCommentsVos(mapCommentsToCommentsVos(post.getComments()))
         .build();
   }
 
-  public  static List<Long> mapCommentsToCommentsIds(List<Comment> comments) {
+  public  static List<CommentVo> mapCommentsToCommentsVos(List<Comment> comments) {
     if (Optional.ofNullable(comments).isPresent()) {
-      return comments.stream().map(Comment::getId).collect(Collectors.toList());
+      return comments.stream().map(comment -> CommentMapper.mapDomainToVo(comment)).collect(Collectors.toList());
     } else {
       return Collections.emptyList();
     }
