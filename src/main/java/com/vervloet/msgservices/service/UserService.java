@@ -39,6 +39,14 @@ public class UserService {
         return  new ResponseEntity<>(UserMapper.mapDomainToWithCommentsVo(user), HttpStatus.OK);
     }
 
+    public ResponseEntity<?> getUserPosts(Long userId) {
+
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        return  new ResponseEntity<>(UserMapper.mapDomainToWithPostsVo(user), HttpStatus.OK);
+    }
+
     public ResponseEntity<?> getAllUsers(){
 
         List<User> allUsers = userRepository.findAll();

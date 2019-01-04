@@ -4,8 +4,10 @@ import com.vervloet.msgservices.domain.model.Comment;
 import com.vervloet.msgservices.domain.model.Post;
 import com.vervloet.msgservices.domain.model.User;
 import com.vervloet.msgservices.domain.vo.CommentVo;
+import com.vervloet.msgservices.domain.vo.PostVo;
 import com.vervloet.msgservices.domain.vo.UserVo;
 import com.vervloet.msgservices.domain.vo.UserWithCommentsVo;
+import com.vervloet.msgservices.domain.vo.UserWithPostsVo;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +46,16 @@ public class UserMapper {
         .build();
   }
 
+  public static UserWithPostsVo mapDomainToWithPostsVo(User user){
+    return UserWithPostsVo.builder()
+        .withId(user.getId())
+        .withEmail(user.getEmail())
+        .withPassword(user.getPassword())
+        .withPostsVos(mapPostsToPostsVos(user.getPosts()))
+        .withCommentsIds(mapCommentsToCommentsIds(user.getComments()))
+        .build();
+  }
+
   public  static List<Long> mapPostsToPostsIds(List<Post> posts) {
     if (Optional.ofNullable(posts).isPresent()) {
       return posts.stream().map(Post::getId).collect(Collectors.toList());
@@ -63,6 +75,14 @@ public class UserMapper {
   public  static List<CommentVo> mapCommentsToCommentsVos(List<Comment> comments) {
     if (Optional.ofNullable(comments).isPresent()) {
       return comments.stream().map(comment -> CommentMapper.mapDomainToVo(comment)).collect(Collectors.toList());
+    } else {
+      return Collections.emptyList();
+    }
+  }
+
+  public  static List<PostVo> mapPostsToPostsVos(List<Post> posts) {
+    if (Optional.ofNullable(posts).isPresent()) {
+      return posts.stream().map(post -> PostMapper.mapDomainToVo(post)).collect(Collectors.toList());
     } else {
       return Collections.emptyList();
     }

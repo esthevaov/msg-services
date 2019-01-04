@@ -50,6 +50,12 @@ public class UserController {
         return userService.getUser(userId);
     }
 
+    @GetMapping("/{userId}/posts")
+    public ResponseEntity<?> getUserPosts(@PathVariable(value = "userId") Long userId) {
+
+        return userService.getUserPosts(userId);
+    }
+
     @GetMapping("/{userId}/comments")
     public ResponseEntity<?> getUserComments(@PathVariable(value = "userId") Long userId) {
 

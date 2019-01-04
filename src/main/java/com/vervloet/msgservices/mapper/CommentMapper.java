@@ -21,8 +21,16 @@ public class CommentMapper {
         .withId(comment.getId())
         .withContent(comment.getContent())
         .withCreated(comment.getCreated())
-        .withUserId(comment.getUser().getId())
-        .withPostId(comment.getPost().getId())
+        .withUserPath(buildUserPath(comment.getUser().getId()))
+        .withPostPath(buildCommentPath(comment.getPost().getId()))
         .build();
+  }
+
+  public static String buildUserPath(Long userId){
+    return "localhost:8080/api/user/"+userId;
+  }
+
+  public static String buildCommentPath(Long postId){
+    return "localhost:8080/api/posts/"+postId;
   }
 }

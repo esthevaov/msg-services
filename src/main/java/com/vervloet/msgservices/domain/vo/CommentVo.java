@@ -6,7 +6,7 @@ import com.vervloet.msgservices.domain.vo.jsonapi.BaseJsonApiModel;
 import java.util.Optional;
 import java.util.Date;
 
-@JsonPropertyOrder(value = {"id", "content", "created", "post_id", "user_id"})
+@JsonPropertyOrder(value = {"id", "content", "created", "post_path", "user_path"})
 public class CommentVo extends BaseJsonApiModel {
 
   @JsonProperty(value = "id")
@@ -18,11 +18,11 @@ public class CommentVo extends BaseJsonApiModel {
   @JsonProperty(value = "created")
   private Date created;
 
-  @JsonProperty(value = "post_id")
-  private Long postId;
+  @JsonProperty(value = "post_path")
+  private String postPath;
 
-  @JsonProperty(value = "user_id")
-  private Long userId;
+  @JsonProperty(value = "user_path")
+  private String userPath;
 
 
   public CommentVo() {
@@ -32,8 +32,8 @@ public class CommentVo extends BaseJsonApiModel {
     Optional.ofNullable(builder.id).ifPresent(this::setId);
     Optional.ofNullable(builder.content).ifPresent(this::setContent);
     Optional.ofNullable(builder.created).ifPresent(this::setCreated);
-    Optional.ofNullable(builder.postId).ifPresent(this::setPostId);
-    Optional.ofNullable(builder.userId).ifPresent(this::setUserId);
+    Optional.ofNullable(builder.postPath).ifPresent(this::setPostPath);
+    Optional.ofNullable(builder.userPath).ifPresent(this::setUserPath);
   }
 
   public static Builder builder() {
@@ -64,20 +64,20 @@ public class CommentVo extends BaseJsonApiModel {
     this.created = created;
   }
 
-  public Long getPostId() {
-    return postId;
+  public String getPostPath() {
+    return postPath;
   }
 
-  public void setPostId(Long postId) {
-    this.postId = postId;
+  public void setPostPath(String postPath) {
+    this.postPath = postPath;
   }
 
-  public Long getUserId() {
-    return userId;
+  public String getUserPath() {
+    return userPath;
   }
 
-  public void setUserId(Long userId) {
-    this.userId = userId;
+  public void setUserPath(String userPath) {
+    this.userPath = userPath;
   }
 
   @Override
@@ -96,8 +96,8 @@ public class CommentVo extends BaseJsonApiModel {
     private Long id;
     private String content;
     private Date created;
-    private Long postId;
-    private Long userId;
+    private String postPath;
+    private String userPath;
 
     public Builder withId(Long id) {
       this.id = id;
@@ -114,13 +114,13 @@ public class CommentVo extends BaseJsonApiModel {
       return this;
     }
 
-    public Builder withPostId(Long postId) {
-      this.postId = postId;
+    public Builder withPostPath(String postPath) {
+      this.postPath = postPath;
       return this;
     }
 
-    public Builder withUserId(Long userId) {
-      this.userId = userId;
+    public Builder withUserPath(String userPath) {
+      this.userPath = userPath;
       return this;
     }
 
