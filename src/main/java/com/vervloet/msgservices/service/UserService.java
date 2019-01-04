@@ -31,6 +31,14 @@ public class UserService {
         return  new ResponseEntity<>(UserMapper.mapDomainToVo(user), HttpStatus.OK);
     }
 
+    public ResponseEntity<?> getUserComments(Long userId) {
+
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        return  new ResponseEntity<>(UserMapper.mapDomainToWithCommentsVo(user), HttpStatus.OK);
+    }
+
     public ResponseEntity<?> getAllUsers(){
 
         List<User> allUsers = userRepository.findAll();
@@ -103,8 +111,6 @@ public class UserService {
 
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-
-
     }
 
 }

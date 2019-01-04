@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-@JsonPropertyOrder(value = {"id", "title", "content", "votes", "created", "user_id", "comments"})
+@JsonPropertyOrder(value = {"id", "title", "content", "votes", "created", "user_id", "comments_vos"})
 public class PostVo extends BaseJsonApiModel {
 
   @JsonProperty(value = "id")
@@ -28,7 +28,7 @@ public class PostVo extends BaseJsonApiModel {
   @JsonProperty(value = "user_id")
   private Long userId;
 
-  @JsonProperty(value = "comments")
+  @JsonProperty(value = "comments_vos")
   private List<CommentVo> commentsVos;
 
 

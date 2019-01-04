@@ -9,7 +9,7 @@ import javax.validation.Valid;
 
 
 @RestController
-@RequestMapping("/api/post")
+@RequestMapping("/api/posts")
 public class PostController {
 
     @Autowired
