@@ -1,3 +1,61 @@
         allPosts.forEach((post) -> {
             System.out.println(post.getVotes());
         });
+
+Optional<Vote> userVote = votedList.stream().filter(vote -> vote.getUserId().equals(user.getId())).findFirst();
+
+        if (userVote.isPresent()) {
+            if (userVote.get().getTypeVote().equals(1)) {
+                return new ResponseEntity<>("Already Upvoted", HttpStatus.CONFLICT);
+            } else if (userVote.get().getTypeVote().equals(0)) {
+                votedList.set(votedList.indexOf(userVote.get()),userVote.get().setTypeVoteAndReturn(1));
+                post.setVotedList(votedList);
+                post.setVotes(post.getVotes()+1L);
+            } else {
+                votedList.set(votedList.indexOf(userVote.get()),userVote.get().setTypeVoteAndReturn(1));
+                post.setVotedList(votedList);
+                post.setVotes(post.getVotes()+2L);
+            }
+        } else {
+            votedList.add(new Vote(post.getId(), user.getId(), 1));
+            post.setVotedList(votedList);
+            post.setVotes(post.getVotes()+1L);
+        }
+
+        return new ResponseEntity<>("Upvoted Successfully", HttpStatus.OK);
+
+        public ResponseEntity<?> downvotePost(Long postId) {
+
+                Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+                CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
+
+                User user = userRepository.findByEmail(customUserDetails.getUsername());
+
+                Post post = postRepository.findById(postId)
+                    .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));
+
+                List<Vote> votedList = post.getVotedList();
+
+                Optional<Vote> userVote = votedList.stream().filter(vote -> vote.getUserId().equals(user.getId())).findFirst();
+
+                if (userVote.isPresent()) {
+                    if (userVote.get().getTypeVote().equals(-1)) {
+                        return new ResponseEntity<>("Already Downvoted", HttpStatus.CONFLICT);
+                    } else if (userVote.get().getTypeVote().equals(0)) {
+                        votedList.set(votedList.indexOf(userVote.get()),userVote.get().setTypeVoteAndReturn(-1));
+                        post.setVotedList(votedList);
+                        post.setVotes(post.getVotes()-1L);
+                    } else {
+                        votedList.set(votedList.indexOf(userVote.get()),userVote.get().setTypeVoteAndReturn(-1));
+                        post.setVotedList(votedList);
+                        post.setVotes(post.getVotes()-2L);
+                    }
+                } else {
+                    votedList.add(new Vote(post.getId(), user.getId(), -1));
+                    post.setVotedList(votedList);
+                    post.setVotes(post.getVotes()-1L);
+                }
+
+                return new ResponseEntity<>("Downvoted Successfully", HttpStatus.OK);
+            }

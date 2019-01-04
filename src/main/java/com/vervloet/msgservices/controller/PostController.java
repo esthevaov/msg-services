@@ -22,6 +22,30 @@ public class PostController {
         return postService.getAllPosts();
     }
 
+    @GetMapping("/vote-asc")
+    public ResponseEntity<?> getAllPostsByVoteNumberAsc() {
+
+        return postService.getAllPostsByVoteNumberAsc();
+    }
+
+    @GetMapping("/vote-desc")
+    public ResponseEntity<?> getAllPostsByVoteNumberDesc() {
+
+        return postService.getAllPostsByVoteNumberDesc();
+    }
+
+    @GetMapping("/comment-num")
+    public ResponseEntity<?> getAllPostsByCommentNumber() {
+
+        return postService.getAllPostsByCommentNumber();
+    }
+
+    @GetMapping("/date-recent")
+    public ResponseEntity<?> getAllPostsByDateRecent() {
+
+        return postService.getAllPostsByDateRecent();
+    }
+
     // Get One Notes
     @GetMapping("/{postId}")
     public ResponseEntity<?> getPost(@PathVariable(value = "postId") Long postId) {
@@ -36,16 +60,16 @@ public class PostController {
         return postService.createPost(post);
     }
 
-    @PostMapping("/{messageId}/up")
-    public ResponseEntity upvoteMessage(@PathVariable(value = "messageId") Long messageId) {
+    @PostMapping("/{postId}/up")
+    public ResponseEntity upvoteMessage(@PathVariable(value = "postId") Long messageId) {
 
-        return postService.upvoteMessage(messageId);
+        return postService.upvotePost(messageId);
     }
 
-    @PostMapping("/{messageId}/down")
-    public ResponseEntity downvoteMessage(@PathVariable(value = "messageId") Long messageId) {
+    @PostMapping("/{postId}/down")
+    public ResponseEntity downvoteMessage(@PathVariable(value = "postId") Long messageId) {
 
-        return postService.downvoteMessage(messageId);
+        return postService.downvotePost(messageId);
     }
 
 

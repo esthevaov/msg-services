@@ -3,6 +3,9 @@ package com.vervloet.msgservices.domain.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -11,24 +14,43 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class Vote {
 
-  @Column(name = "message_id")
-  private Long messageId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @Column(name = "post_id")
+  private Long postId;
 
   @Column(name = "user_id")
   private Long userId;
 
   @Column(name = "type_vote")
-  private Integer type_vote;
+  private Integer typeVote;
+
 
   public Vote() {
   }
 
-  public Long getMessageId() {
-    return messageId;
+  public Vote(Long messageId, Long userId, Integer typeVote) {
+    this.postId = messageId;
+    this.userId = userId;
+    this.typeVote = typeVote;
   }
 
-  public void setMessageId(Long messageId) {
-    this.messageId = messageId;
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public Long getPostId() {
+    return postId;
+  }
+
+  public void setPostId(Long postId) {
+    this.postId = postId;
   }
 
   public Long getUserId() {
@@ -39,11 +61,16 @@ public class Vote {
     this.userId = userId;
   }
 
-  public Integer getType_vote() {
-    return type_vote;
+  public Integer getTypeVote() {
+    return typeVote;
   }
 
-  public void setType_vote(Integer type_vote) {
-    this.type_vote = type_vote;
+  public void setTypeVote(Integer typeVote) {
+    this.typeVote = typeVote;
+  }
+
+  public Vote setTypeVoteAndReturn(Integer typeVote) {
+    this.typeVote = typeVote;
+    return this;
   }
 }

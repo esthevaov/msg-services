@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.validation.constraints.Size;
+import net.bytebuddy.implementation.bind.annotation.Default;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,7 +29,8 @@ public class Post {
     @Size(max = 1000)
     private String content;
 
-    private Long votes = 0L;
+    @Column(name = "votes")
+    private Long votes;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -45,8 +47,7 @@ public class Post {
     private List<Comment> comments;
 
     @OneToMany(cascade = CascadeType.ALL,
-        fetch = FetchType.LAZY,
-        mappedBy = "post")
+        fetch = FetchType.LAZY)
     private List<Vote> votedList;
 
     public Post() {

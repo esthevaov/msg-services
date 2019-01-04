@@ -11,6 +11,8 @@ import com.vervloet.msgservices.repository.PostRepository;
 import com.vervloet.msgservices.repository.UserRepository;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,8 @@ public class PostService {
 
         post.setUser(user);
 
+        post.setVotes(0L);
+
         Post savedPost = postRepository.save(post);
 
         return new ResponseEntity<>(PostMapper.mapDomainToVo(savedPost), HttpStatus.OK);
@@ -61,7 +65,7 @@ public class PostService {
         return new ResponseEntity<>(PostMapper.mapDomainToVo(post), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> upvoteMessage(Long messageId) {
+    public ResponseEntity<?> upvotePost(Long postId) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -69,29 +73,29 @@ public class PostService {
 
         User user = userRepository.findByEmail(customUserDetails.getUsername());
 
-        Post message = postRepository.findById(messageId)
-                .orElseThrow(() -> new ResourceNotFoundException("message", "id", messageId));
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));
 
-        List<Vote> votedList = message.getVotedList();
+        List<Vote> votedList = post.getVotedList();
+        Map<Long, Vote> votedMap = votedList.stream().collect(Collectors.toMap(Vote::getUserId, Function.identity()));
 
-        if (!votedList.(user.getId())){
-            votedMap.put(user.getId(), true);
-            message.setVotedMap(votedMap);
-            message.setVotes(message.getVotes()+1L);
+        if (!votedMap.containsKey(user.getId())){
+            votedList.add(new Vote(post.getId(), user.getId(), 1));
+            post.setVotes(post.getVotes()+1L);
         } else {
-            if (votedMap.get(user.getId())){
+            if (votedMap.get(user.getId()).getTypeVote() == 1){
                 return new ResponseEntity<>("Already Upvoted", HttpStatus.CONFLICT);
             } else {
-                votedMap.replace(user.getId(),true);
-                message.setVotedMap(votedMap);
-                message.setVotes(message.getVotes()+2L);
+                votedMap.get(user.getId()).setTypeVote(1);
+                post.setVotes(post.getVotes()+2L);
             }
         }
+        Post savedPost = postRepository.save(post);
 
         return new ResponseEntity<>("Upvoted Successfully", HttpStatus.OK);
     }
 
-    public ResponseEntity<?> downvoteMessage(Long messageId) {
+    public ResponseEntity<?> downvotePost(Long postId) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -99,24 +103,24 @@ public class PostService {
 
         User user = userRepository.findByEmail(customUserDetails.getUsername());
 
-        Post message = postRepository.findById(messageId)
-            .orElseThrow(() -> new ResourceNotFoundException("message", "id", messageId));
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));
 
-        Map<Long,Boolean> votedMap = message.getVotedMap();
+        List<Vote> votedList = post.getVotedList();
+        Map<Long, Vote> votedMap = votedList.stream().collect(Collectors.toMap(Vote::getUserId, Function.identity()));
 
         if (!votedMap.containsKey(user.getId())){
-            votedMap.put(user.getId(), false);
-            message.setVotedMap(votedMap);
-            message.setVotes(message.getVotes()-1L);
+            votedList.add(new Vote(post.getId(), user.getId(), -1));
+            post.setVotes(post.getVotes()-1L);
         } else {
-            if (!votedMap.get(user.getId())){
+            if (votedMap.get(user.getId()).getTypeVote() == -1){
                 return new ResponseEntity<>("Already Downvoted", HttpStatus.CONFLICT);
             } else {
-                votedMap.replace(user.getId(),false);
-                message.setVotedMap(votedMap);
-                message.setVotes(message.getVotes()-2L);
+                votedMap.get(user.getId()).setTypeVote(-1);
+                post.setVotes(post.getVotes()-2L);
             }
         }
+        Post savedPost = postRepository.save(post);
 
         return new ResponseEntity<>("Downvoted Successfully", HttpStatus.OK);
     }
@@ -136,8 +140,46 @@ public class PostService {
         } else {
             return new ResponseEntity<>("Action not authorized for this user", HttpStatus.UNAUTHORIZED);
         }
+    }
 
+    public ResponseEntity<?> getAllPostsByVoteNumberAsc() {
 
+        List<Post> allPosts = postRepository.findAllByOrderByVotesAsc();
+
+        List<PostVo> allPostsVo = allPosts.stream().map(n -> PostMapper.mapDomainToVo(n))
+            .collect(Collectors.toList());
+
+        return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> getAllPostsByVoteNumberDesc() {
+
+        List<Post> allPosts = postRepository.findAllByOrderByVotesDesc();
+
+        List<PostVo> allPostsVo = allPosts.stream().map(n -> PostMapper.mapDomainToVo(n))
+            .collect(Collectors.toList());
+
+        return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> getAllPostsByCommentNumber() {
+
+        List<Post> allPosts = postRepository.findAllByOrderByCommentsDesc();
+
+        List<PostVo> allPostsVo = allPosts.stream().map(n -> PostMapper.mapDomainToVo(n))
+            .collect(Collectors.toList());
+
+        return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> getAllPostsByDateRecent() {
+
+        List<Post> allPosts = postRepository.findAllByOrderByCreatedDesc();
+
+        List<PostVo> allPostsVo = allPosts.stream().map(n -> PostMapper.mapDomainToVo(n))
+            .collect(Collectors.toList());
+
+        return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
     }
 
 }
