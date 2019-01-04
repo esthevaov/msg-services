@@ -1,5 +1,7 @@
 package com.vervloet.msgservices.controller;
 
+import com.vervloet.msgservices.domain.model.Comment;
+import com.vervloet.msgservices.service.CommentService;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,66 +22,33 @@ public class CommentController {
 
   // Get All Notes
   @GetMapping()
-  public ResponseEntity<?> getAllPosts() {
+  public ResponseEntity<?> getAllComments() {
 
-    return postService.getAllPosts();
-  }
-
-  @GetMapping("/vote-asc")
-  public ResponseEntity<?> getAllPostsByVoteNumberAsc() {
-
-    return postService.getAllPostsByVoteNumberAsc();
-  }
-
-  @GetMapping("/vote-desc")
-  public ResponseEntity<?> getAllPostsByVoteNumberDesc() {
-
-    return postService.getAllPostsByVoteNumberDesc();
-  }
-
-  @GetMapping("/comment-num")
-  public ResponseEntity<?> getAllPostsByCommentNumber() {
-
-    return postService.getAllPostsByCommentNumber();
-  }
-
-  @GetMapping("/date-recent")
-  public ResponseEntity<?> getAllPostsByDateRecent() {
-
-    return postService.getAllPostsByDateRecent();
+    return commentService.getAllComments();
   }
 
   // Get One Notes
-  @GetMapping("/{postId}")
-  public ResponseEntity<?> getPost(@PathVariable(value = "postId") Long postId) {
+  @GetMapping("/{commentId}")
+  public ResponseEntity<?> getCommentById(@PathVariable(value = "postId") Long postId,
+                                          @PathVariable(value = "commentId") Long commentId) {
 
-    return postService.getPostById(postId);
+    return commentService.getCommentById(commentId);
   }
 
   // Create a new Post
   @PostMapping()
-  public ResponseEntity<?> createPost(@Valid @RequestBody Post post) {
+  public ResponseEntity<?> createComment(@PathVariable(value = "postId") Long postId,
+                                         @Valid @RequestBody Comment comment) {
 
-    return postService.createPost(post);
+    return commentService.createComment(postId, comment);
   }
-
-  @PostMapping("/{postId}/up")
-  public ResponseEntity upvoteMessage(@PathVariable(value = "postId") Long messageId) {
-
-    return postService.upvotePost(messageId);
-  }
-
-  @PostMapping("/{postId}/down")
-  public ResponseEntity downvoteMessage(@PathVariable(value = "postId") Long messageId) {
-
-    return postService.downvotePost(messageId);
-  }
-
 
   @DeleteMapping("/{postId}")
-  public ResponseEntity<?> deletePost(@PathVariable(value = "postId") Long postId) {
+  public ResponseEntity<?> deleteComment(@PathVariable(value = "postId") Long postId,
+                                         @PathVariable(value = "commentId") Long commentId) {
 
-    return postService.deletePost(postId);
+    return commentService.deleteComment(commentId);
   }
+}
 
 

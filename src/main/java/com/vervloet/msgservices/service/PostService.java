@@ -35,7 +35,8 @@ public class PostService {
 
         CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
 
-        User user = userRepository.findByEmail(customUserDetails.getUsername());
+        User user = userRepository.findByEmail(customUserDetails.getUsername())
+            .orElseThrow(() -> new ResourceNotFoundException("user", "email", customUserDetails.getUsername()));
 
         post.setUser(user);
 
@@ -55,91 +56,6 @@ public class PostService {
 
         return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
 
-    }
-
-    public ResponseEntity<?> getPostById(Long postId) {
-
-        Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));
-
-        return new ResponseEntity<>(PostMapper.mapDomainToVo(post), HttpStatus.OK);
-    }
-
-    public ResponseEntity<?> upvotePost(Long postId) {
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
-
-        User user = userRepository.findByEmail(customUserDetails.getUsername());
-
-        Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));
-
-        List<Vote> votedList = post.getVotedList();
-        Map<Long, Vote> votedMap = votedList.stream().collect(Collectors.toMap(Vote::getUserId, Function.identity()));
-
-        if (!votedMap.containsKey(user.getId())){
-            votedList.add(new Vote(post.getId(), user.getId(), 1));
-            post.setVotes(post.getVotes()+1L);
-        } else {
-            if (votedMap.get(user.getId()).getTypeVote() == 1){
-                return new ResponseEntity<>("Already Upvoted", HttpStatus.CONFLICT);
-            } else {
-                votedMap.get(user.getId()).setTypeVote(1);
-                post.setVotes(post.getVotes()+2L);
-            }
-        }
-        Post savedPost = postRepository.save(post);
-
-        return new ResponseEntity<>("Upvoted Successfully", HttpStatus.OK);
-    }
-
-    public ResponseEntity<?> downvotePost(Long postId) {
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
-
-        User user = userRepository.findByEmail(customUserDetails.getUsername());
-
-        Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));
-
-        List<Vote> votedList = post.getVotedList();
-        Map<Long, Vote> votedMap = votedList.stream().collect(Collectors.toMap(Vote::getUserId, Function.identity()));
-
-        if (!votedMap.containsKey(user.getId())){
-            votedList.add(new Vote(post.getId(), user.getId(), -1));
-            post.setVotes(post.getVotes()-1L);
-        } else {
-            if (votedMap.get(user.getId()).getTypeVote() == -1){
-                return new ResponseEntity<>("Already Downvoted", HttpStatus.CONFLICT);
-            } else {
-                votedMap.get(user.getId()).setTypeVote(-1);
-                post.setVotes(post.getVotes()-2L);
-            }
-        }
-        Post savedPost = postRepository.save(post);
-
-        return new ResponseEntity<>("Downvoted Successfully", HttpStatus.OK);
-    }
-
-    public ResponseEntity<?> deletePost(Long postId) {
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
-
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
-
-        if( post.getUser().getEmail().equals(customUserDetails.getUsername())){
-            postRepository.delete(post);
-            return new ResponseEntity<>("Post Deleted", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Action not authorized for this user", HttpStatus.UNAUTHORIZED);
-        }
     }
 
     public ResponseEntity<?> getAllPostsByVoteNumberAsc() {
@@ -181,5 +97,94 @@ public class PostService {
 
         return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
     }
+
+    public ResponseEntity<?> getPostById(Long postId) {
+
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));
+
+        return new ResponseEntity<>(PostMapper.mapDomainToVo(post), HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> upvotePost(Long postId) {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
+
+        User user = userRepository.findByEmail(customUserDetails.getUsername())
+            .orElseThrow(() -> new ResourceNotFoundException("user", "email", customUserDetails.getUsername()));
+
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));
+
+        List<Vote> votedList = post.getVotedList();
+        Map<Long, Vote> votedMap = votedList.stream().collect(Collectors.toMap(Vote::getUserId, Function.identity()));
+
+        if (!votedMap.containsKey(user.getId())){
+            votedList.add(new Vote(post.getId(), user.getId(), 1));
+            post.setVotes(post.getVotes()+1L);
+        } else {
+            if (votedMap.get(user.getId()).getTypeVote() == 1){
+                return new ResponseEntity<>("Already Upvoted", HttpStatus.CONFLICT);
+            } else {
+                votedMap.get(user.getId()).setTypeVote(1);
+                post.setVotes(post.getVotes()+2L);
+            }
+        }
+        Post savedPost = postRepository.save(post);
+
+        return new ResponseEntity<>("Upvoted Successfully", HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> downvotePost(Long postId) {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
+
+        User user = userRepository.findByEmail(customUserDetails.getUsername())
+            .orElseThrow(() -> new ResourceNotFoundException("user", "email", customUserDetails.getUsername()));
+
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));
+
+        List<Vote> votedList = post.getVotedList();
+        Map<Long, Vote> votedMap = votedList.stream().collect(Collectors.toMap(Vote::getUserId, Function.identity()));
+
+        if (!votedMap.containsKey(user.getId())){
+            votedList.add(new Vote(post.getId(), user.getId(), -1));
+            post.setVotes(post.getVotes()-1L);
+        } else {
+            if (votedMap.get(user.getId()).getTypeVote() == -1){
+                return new ResponseEntity<>("Already Downvoted", HttpStatus.CONFLICT);
+            } else {
+                votedMap.get(user.getId()).setTypeVote(-1);
+                post.setVotes(post.getVotes()-2L);
+            }
+        }
+        Post savedPost = postRepository.save(post);
+
+        return new ResponseEntity<>("Downvoted Successfully", HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> deletePost(Long postId) {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+
+        if( post.getUser().getEmail().equals(customUserDetails.getUsername())){
+            postRepository.delete(post);
+            return new ResponseEntity<>("Post Deleted", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Action not authorized for this user", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
 
 }

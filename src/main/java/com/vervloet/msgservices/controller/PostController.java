@@ -22,25 +22,25 @@ public class PostController {
         return postService.getAllPosts();
     }
 
-    @GetMapping("/vote-asc")
+    @GetMapping("/?sort=vote-asc")
     public ResponseEntity<?> getAllPostsByVoteNumberAsc() {
 
         return postService.getAllPostsByVoteNumberAsc();
     }
 
-    @GetMapping("/vote-desc")
+    @GetMapping("/?sort=vote-desc")
     public ResponseEntity<?> getAllPostsByVoteNumberDesc() {
 
         return postService.getAllPostsByVoteNumberDesc();
     }
 
-    @GetMapping("/comment-num")
+    @GetMapping("/?sort=comment-num")
     public ResponseEntity<?> getAllPostsByCommentNumber() {
 
         return postService.getAllPostsByCommentNumber();
     }
 
-    @GetMapping("/date-recent")
+    @GetMapping("/?sort=date-recent")
     public ResponseEntity<?> getAllPostsByDateRecent() {
 
         return postService.getAllPostsByDateRecent();
