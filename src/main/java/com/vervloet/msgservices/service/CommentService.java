@@ -66,7 +66,7 @@ public class CommentService {
 
     Comment savedComment = commentRepository.save(comment);
 
-    return new ResponseEntity<>(CommentMapper.mapDomainToVo(savedComment), HttpStatus.OK);
+    return new ResponseEntity<>(CommentMapper.mapDomainToVo(savedComment), HttpStatus.CREATED);
   }
 
   public ResponseEntity<?> deleteComment(Long commentId) {

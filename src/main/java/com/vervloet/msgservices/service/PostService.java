@@ -44,7 +44,7 @@ public class PostService {
 
         Post savedPost = postRepository.save(post);
 
-        return new ResponseEntity<>(PostMapper.mapDomainToVo(savedPost), HttpStatus.OK);
+        return new ResponseEntity<>(PostMapper.mapDomainToVo(savedPost), HttpStatus.CREATED);
     }
 
     public ResponseEntity<?> getAllPosts() {

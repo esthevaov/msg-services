@@ -63,7 +63,7 @@ public class UserService {
 
             User savedUser = userRepository.save(user);
 
-            return new ResponseEntity<>(UserMapper.mapDomainToVo(savedUser), HttpStatus.OK);
+            return new ResponseEntity<>(UserMapper.mapDomainToVo(savedUser), HttpStatus.CREATED);
         } else {
 
             return new ResponseEntity<>("E-mail already registered", HttpStatus.CONFLICT);
