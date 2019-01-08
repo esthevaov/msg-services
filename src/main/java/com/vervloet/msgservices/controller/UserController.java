@@ -1,7 +1,6 @@
 package com.vervloet.msgservices.controller;
 
 import com.vervloet.msgservices.domain.model.User;
-import com.vervloet.msgservices.repository.UserRepository;
 import com.vervloet.msgservices.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(value = "Pseudo Reddit API")
+@Api(value = "Pseudo Reddit API", tags = {"Pseudo Reddit API - Users"}, description = "User API")
 @RequestMapping("/api/user")
 @RestController
 public class UserController {
@@ -27,7 +26,9 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private UserRepository userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @ApiOperation(
         value = "Create a new user based on 'email' and 'password' defined on the body of the " +
@@ -57,7 +58,8 @@ public class UserController {
     }*/
 
     @ApiOperation(
-        value = "Get user's list of posts, the user is defined by the userId on the url.",
+        value = "Get user's list of posts.",
+        notes = "The user is defined by the userId on the url.",
         tags = {"Pseudo Reddit API - Users"}
     )
     @GetMapping("/{userId}/posts")
@@ -67,7 +69,8 @@ public class UserController {
     }
 
     @ApiOperation(
-        value = "Get user's list of comments, the user is defined by the userId on the url.",
+        value = "Get user's list of comments.",
+        notes = "The user is defined by the userId on the url.",
         tags = {"Pseudo Reddit API - Users"}
     )
     @GetMapping("/{userId}/comments")
@@ -77,7 +80,8 @@ public class UserController {
     }
 
     @ApiOperation(
-        value = "Delete user, the user is defined by the userId on the url.",
+        value = "Delete user.",
+        notes = "The user is defined by the userId on the url.",
         tags = {"Pseudo Reddit API - Users"}
     )
     @DeleteMapping("/{userId}")
@@ -87,7 +91,8 @@ public class UserController {
     }
 
     @ApiOperation(
-        value = "Change user's email to the 'email' tag passed on the body of the request, only " +
+        value = "Change user's email.",
+        notes = "Change user's email to the 'email' tag passed on the body of the request, only " +
         "if 'password' matches with the user's password. The user is defined by the userId on " +
         "the url.",
         tags = {"Pseudo Reddit API - Users"}
@@ -99,7 +104,8 @@ public class UserController {
     }
 
     @ApiOperation(
-        value = "Change user's password to the 'new-password' tag passed on the body of the " +
+        value = "Change user's password.",
+        notes = "Change user's password to the 'new-password' tag passed on the body of the " +
             "request, only if tag 'old-password' matches with the user's actual password. " +
             "The user is defined by the userId on the url.",
         tags = {"Pseudo Reddit API - Users"}

@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.vervloet.msgservices.domain.vo.jsonapi.BaseJsonApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.Optional;
 
 @JsonPropertyOrder(value = {"user_id", "email", "password", "posts_vos", "comments_ids"})
 public class UserWithPostsVo extends BaseJsonApiModel {
 
+  @ApiModelProperty(hidden = true)
   @JsonProperty(value = "user_id", access = Access.READ_ONLY)
   private Long id;
 

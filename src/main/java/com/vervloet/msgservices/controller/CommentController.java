@@ -15,13 +15,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(value = "Pseudo Reddit API")
+@Api(value = "Pseudo Reddit API", tags = {"Pseudo Reddit API - Comments"}, description = "Comment API")
 @RestController
 @RequestMapping("/api/posts/{postId}/comments")
 public class CommentController {
 
   @Autowired
   private CommentService commentService;
+
+  @Autowired
+  public CommentController(CommentService commentService) {
+    this.commentService = commentService;
+  }
 
   @ApiOperation(
       value = "Get list of all comments.",
@@ -34,7 +39,8 @@ public class CommentController {
   }
 
   @ApiOperation(
-      value = "Get comment, the comment is defined by the commentId on the url.",
+      value = "Get comment.",
+      notes = "The comment is defined by the commentId on the url.",
       tags = {"Pseudo Reddit API - Comments"}
   )
   @GetMapping("/{commentId}")
@@ -57,7 +63,8 @@ public class CommentController {
   }
 
   @ApiOperation(
-      value = "Delete comment, the comment is defined by the commentId on the url.",
+      value = "Delete comment.",
+      notes = "The comment is defined by the commentId on the url.",
       tags = {"Pseudo Reddit API - Comments"}
   )
   @DeleteMapping("/{postId}")

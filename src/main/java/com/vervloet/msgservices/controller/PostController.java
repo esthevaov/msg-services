@@ -9,13 +9,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
-@Api(value = "Pseudo Reddit API")
+@Api(value = "Pseudo Reddit API", tags = {"Pseudo Reddit API - Posts"}, description = "Post API")
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
 
     @ApiOperation(
         value = "Get list of all posts.",
@@ -89,7 +94,8 @@ public class PostController {
     }
 
     @ApiOperation(
-        value = "Upvote post, the post is defined by the postId on the url.",
+        value = "Upvote post.",
+        notes = "The post is defined by the postId on the url.",
         tags = {"Pseudo Reddit API - Posts"}
     )
     @PostMapping("/{postId}/up")
@@ -99,7 +105,8 @@ public class PostController {
     }
 
     @ApiOperation(
-        value = "Downvote post, the post is defined by the postId on the url.",
+        value = "Downvote post.",
+        notes = "The post is defined by the postId on the url.",
         tags = {"Pseudo Reddit API - Posts"}
     )
     @PostMapping("/{postId}/down")
@@ -109,7 +116,8 @@ public class PostController {
     }
 
     @ApiOperation(
-        value = "Delete post, the post is defined by the postId on the url.",
+        value = "Delete post.",
+        notes = "The post is defined by the postId on the url.",
         tags = {"Pseudo Reddit API - Posts"}
     )
     @DeleteMapping("/{postId}")

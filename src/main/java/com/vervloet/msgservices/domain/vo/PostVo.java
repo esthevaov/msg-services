@@ -3,6 +3,7 @@ package com.vervloet.msgservices.domain.vo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.vervloet.msgservices.domain.vo.jsonapi.BaseJsonApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import java.util.Optional;
 @JsonPropertyOrder(value = {"id", "title", "content", "votes", "created", "user_id", "comments_vos"})
 public class PostVo extends BaseJsonApiModel {
 
+  @ApiModelProperty(hidden = true)
   @JsonProperty(value = "id")
   private Long id;
 
