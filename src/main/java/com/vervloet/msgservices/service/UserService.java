@@ -6,7 +6,6 @@ import com.vervloet.msgservices.domain.exceptions.ResourceNotFoundException;
 import com.vervloet.msgservices.domain.vo.UserVo;
 import com.vervloet.msgservices.mapper.UserMapper;
 import com.vervloet.msgservices.repository.UserRepository;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +30,7 @@ public class UserService {
         return  new ResponseEntity<>(UserMapper.mapDomainToVo(user), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getUserComments(Long userId) {
+    public ResponseEntity<?> getComments(Long userId) {
 
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
@@ -39,7 +38,7 @@ public class UserService {
         return  new ResponseEntity<>(UserMapper.mapDomainToWithCommentsVo(user), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getUserPosts(Long userId) {
+    public ResponseEntity<?> getPosts(Long userId) {
 
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
@@ -47,7 +46,7 @@ public class UserService {
         return  new ResponseEntity<>(UserMapper.mapDomainToWithPostsVo(user), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getAllUsers(){
+    public ResponseEntity<?> getAll(){
 
         List<User> allUsers = userRepository.findAll();
 
@@ -57,7 +56,7 @@ public class UserService {
         return new ResponseEntity<>(allUsersVo, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> createUser(User user) {
+    public ResponseEntity<?> create(User user) {
 
         if(!userRepository.findByEmail(user.getEmail()).isPresent()) {
 
@@ -70,7 +69,7 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<?> deleteUser(Long userId) {
+    public ResponseEntity<?> delete(Long userId) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -90,7 +89,7 @@ public class UserService {
 
     }
 
-    public ResponseEntity<?> updateUserEmail(User userChange, Long userId){
+    public ResponseEntity<?> updateEmail(User userChange, Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
@@ -105,7 +104,7 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<?> updateUserPassword(Map<String, String> passwords, Long userId){
+    public ResponseEntity<?> updatePassword(Map<String, String> passwords, Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 

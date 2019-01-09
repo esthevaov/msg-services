@@ -35,7 +35,7 @@ public class CommentController {
   @GetMapping()
   public ResponseEntity<?> getAllComments() {
 
-    return commentService.getAllComments();
+    return commentService.getAll();
   }
 
   @ApiOperation(
@@ -47,7 +47,7 @@ public class CommentController {
   public ResponseEntity<?> getCommentById(@PathVariable(value = "postId") Long postId,
                                           @PathVariable(value = "commentId") Long commentId) {
 
-    return commentService.getCommentById(commentId);
+    return commentService.getById(commentId);
   }
 
   @ApiOperation(
@@ -59,7 +59,7 @@ public class CommentController {
   public ResponseEntity<?> createComment(@PathVariable(value = "postId") Long postId,
                                          @Valid @RequestBody Comment comment) {
 
-    return commentService.createComment(postId, comment);
+    return commentService.create(postId, comment);
   }
 
   @ApiOperation(
@@ -67,11 +67,11 @@ public class CommentController {
       notes = "The comment is defined by the commentId on the url.",
       tags = {"Pseudo Reddit API - Comments"}
   )
-  @DeleteMapping("/{postId}")
+  @DeleteMapping("/{commentId}")
   public ResponseEntity<?> deleteComment(@PathVariable(value = "postId") Long postId,
                                          @PathVariable(value = "commentId") Long commentId) {
 
-    return commentService.deleteComment(commentId);
+    return commentService.delete(commentId);
   }
 }
 

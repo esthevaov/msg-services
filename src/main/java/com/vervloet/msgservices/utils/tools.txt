@@ -207,3 +207,21 @@ Optional<Vote> userVote = votedList.stream().filter(vote -> vote.getUserId().equ
 
               }
             }
+
+
+
+    /*@ApiOperation(
+        value = "Get user information.",
+        tags = {"Pseudo Reddit API - Users"}
+    )
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUser(@PathVariable(value = "userId") Long userId) {
+
+        return userService.getUser(userId);
+    }
+
+    @GetMapping()
+    public ResponseEntity<?> getAllUsers(){
+
+        return userService.getAllUsers();
+    }*/

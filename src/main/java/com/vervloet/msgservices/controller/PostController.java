@@ -29,7 +29,7 @@ public class PostController {
     @GetMapping()
     public ResponseEntity<?> getAllPosts() {
 
-        return postService.getAllPosts();
+        return postService.getAll();
     }
 
     @ApiOperation(
@@ -39,7 +39,7 @@ public class PostController {
     @GetMapping("/?sort=vote-asc")
     public ResponseEntity<?> getAllPostsByVoteNumberAsc() {
 
-        return postService.getAllPostsByVoteNumberAsc();
+        return postService.getAllByVoteNumberAsc();
     }
 
     @ApiOperation(
@@ -49,7 +49,7 @@ public class PostController {
     @GetMapping("/?sort=vote-desc")
     public ResponseEntity<?> getAllPostsByVoteNumberDesc() {
 
-        return postService.getAllPostsByVoteNumberDesc();
+        return postService.getAllByVoteNumberDesc();
     }
 
     @ApiOperation(
@@ -59,7 +59,7 @@ public class PostController {
     @GetMapping("/?sort=comment-num")
     public ResponseEntity<?> getAllPostsByCommentNumber() {
 
-        return postService.getAllPostsByCommentNumber();
+        return postService.getAllByCommentNumber();
     }
 
     @ApiOperation(
@@ -69,7 +69,7 @@ public class PostController {
     @GetMapping("/?sort=date-recent")
     public ResponseEntity<?> getAllPostsByDateRecent() {
 
-        return postService.getAllPostsByDateRecent();
+        return postService.getAllByDateRecent();
     }
 
     @ApiOperation(
@@ -77,9 +77,9 @@ public class PostController {
         tags = {"Pseudo Reddit API - Posts"}
     )
     @GetMapping("/{postId}")
-    public ResponseEntity<?> getPost(@PathVariable(value = "postId") Long postId) {
+    public ResponseEntity<?> getPostById(@PathVariable(value = "postId") Long postId) {
 
-        return postService.getPostById(postId);
+        return postService.getById(postId);
     }
 
     @ApiOperation(
@@ -90,7 +90,7 @@ public class PostController {
     @PostMapping()
     public ResponseEntity<?> createPost(@Valid @RequestBody Post post) {
 
-        return postService.createPost(post);
+        return postService.create(post);
     }
 
     @ApiOperation(
@@ -99,9 +99,9 @@ public class PostController {
         tags = {"Pseudo Reddit API - Posts"}
     )
     @PostMapping("/{postId}/up")
-    public ResponseEntity upvoteMessage(@PathVariable(value = "postId") Long messageId) {
+    public ResponseEntity upvotePost(@PathVariable(value = "postId") Long messageId) {
 
-        return postService.upvotePost(messageId);
+        return postService.upvote(messageId);
     }
 
     @ApiOperation(
@@ -110,9 +110,9 @@ public class PostController {
         tags = {"Pseudo Reddit API - Posts"}
     )
     @PostMapping("/{postId}/down")
-    public ResponseEntity downvoteMessage(@PathVariable(value = "postId") Long messageId) {
+    public ResponseEntity downvotePost(@PathVariable(value = "postId") Long messageId) {
 
-        return postService.downvotePost(messageId);
+        return postService.downvote(messageId);
     }
 
     @ApiOperation(
@@ -123,7 +123,7 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable(value = "postId") Long postId) {
 
-        return postService.deletePost(postId);
+        return postService.delete(postId);
     }
 
 }

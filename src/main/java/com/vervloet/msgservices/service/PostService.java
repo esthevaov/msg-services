@@ -29,7 +29,7 @@ public class PostService {
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<?> createPost(Post post) {
+    public ResponseEntity<?> create(Post post) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -47,7 +47,7 @@ public class PostService {
         return new ResponseEntity<>(PostMapper.mapDomainToVo(savedPost), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<?> getAllPosts() {
+    public ResponseEntity<?> getAll() {
 
         List<Post> allPosts = postRepository.findAll();
 
@@ -58,7 +58,7 @@ public class PostService {
 
     }
 
-    public ResponseEntity<?> getAllPostsByVoteNumberAsc() {
+    public ResponseEntity<?> getAllByVoteNumberAsc() {
 
         List<Post> allPosts = postRepository.findAllByOrderByVotesAsc();
 
@@ -68,7 +68,7 @@ public class PostService {
         return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getAllPostsByVoteNumberDesc() {
+    public ResponseEntity<?> getAllByVoteNumberDesc() {
 
         List<Post> allPosts = postRepository.findAllByOrderByVotesDesc();
 
@@ -78,7 +78,7 @@ public class PostService {
         return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getAllPostsByCommentNumber() {
+    public ResponseEntity<?> getAllByCommentNumber() {
 
         List<Post> allPosts = postRepository.findAllByOrderByCommentsDesc();
 
@@ -88,7 +88,7 @@ public class PostService {
         return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getAllPostsByDateRecent() {
+    public ResponseEntity<?> getAllByDateRecent() {
 
         List<Post> allPosts = postRepository.findAllByOrderByCreatedDesc();
 
@@ -98,7 +98,7 @@ public class PostService {
         return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getPostById(Long postId) {
+    public ResponseEntity<?> getById(Long postId) {
 
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));
@@ -106,7 +106,7 @@ public class PostService {
         return new ResponseEntity<>(PostMapper.mapDomainToVo(post), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> upvotePost(Long postId) {
+    public ResponseEntity<?> upvote(Long postId) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -137,7 +137,7 @@ public class PostService {
         return new ResponseEntity<>("Upvoted Successfully", HttpStatus.OK);
     }
 
-    public ResponseEntity<?> downvotePost(Long postId) {
+    public ResponseEntity<?> downvote(Long postId) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -168,7 +168,7 @@ public class PostService {
         return new ResponseEntity<>("Downvoted Successfully", HttpStatus.OK);
     }
 
-    public ResponseEntity<?> deletePost(Long postId) {
+    public ResponseEntity<?> delete(Long postId) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

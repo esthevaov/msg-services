@@ -38,24 +38,8 @@ public class UserController {
     @PostMapping("/create-user")
     public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
 
-        return userService.createUser(user);
+        return userService.create(user);
     }
-
-    /*@ApiOperation(
-        value = "Get user information.",
-        tags = {"Pseudo Reddit API - Users"}
-    )
-    @GetMapping("/{userId}")
-    public ResponseEntity<?> getUser(@PathVariable(value = "userId") Long userId) {
-
-        return userService.getUser(userId);
-    }
-
-    @GetMapping()
-    public ResponseEntity<?> getAllUsers(){
-
-        return userService.getAllUsers();
-    }*/
 
     @ApiOperation(
         value = "Get user's list of posts.",
@@ -65,7 +49,7 @@ public class UserController {
     @GetMapping("/{userId}/posts")
     public ResponseEntity<?> getUserPosts(@PathVariable(value = "userId") Long userId) {
 
-        return userService.getUserPosts(userId);
+        return userService.getPosts(userId);
     }
 
     @ApiOperation(
@@ -76,7 +60,7 @@ public class UserController {
     @GetMapping("/{userId}/comments")
     public ResponseEntity<?> getUserComments(@PathVariable(value = "userId") Long userId) {
 
-        return userService.getUserComments(userId);
+        return userService.getComments(userId);
     }
 
     @ApiOperation(
@@ -87,7 +71,7 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable(value = "userId") Long userId) {
 
-        return userService.deleteUser(userId);
+        return userService.delete(userId);
     }
 
     @ApiOperation(
@@ -100,7 +84,7 @@ public class UserController {
     @PutMapping("/{userId}/change-email")
     public ResponseEntity<?> updateUserEmail(@RequestBody User user,
                                 @PathVariable(value = "userId") Long userId){
-        return userService.updateUserEmail(user, userId);
+        return userService.updateEmail(user, userId);
     }
 
     @ApiOperation(
@@ -113,6 +97,6 @@ public class UserController {
     @PutMapping("/{userId}/change-password")
     public ResponseEntity<?> updateUserPassword(@RequestBody Map<String, String> passwords,
                                    @PathVariable(value = "userId") Long userId){
-        return userService.updateUserPassword(passwords, userId);
+        return userService.updatePassword(passwords, userId);
     }
 }

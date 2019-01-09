@@ -30,7 +30,7 @@ public class CommentService {
   @Autowired
   private CommentRepository commentRepository;
 
-  public ResponseEntity<?> getAllComments() {
+  public ResponseEntity<?> getAll() {
 
     List<Comment> allComments = commentRepository.findAll();
 
@@ -40,7 +40,7 @@ public class CommentService {
     return new ResponseEntity<>(allCommentsVo, HttpStatus.OK);
   }
 
-  public ResponseEntity<?> getCommentById(Long commentId) {
+  public ResponseEntity<?> getById(Long commentId) {
 
     Comment comment = commentRepository.findById(commentId)
         .orElseThrow(() -> new ResourceNotFoundException("comment", "id", commentId));
@@ -48,7 +48,7 @@ public class CommentService {
     return new ResponseEntity<>(CommentMapper.mapDomainToVo(comment), HttpStatus.OK);
   }
 
-  public ResponseEntity<?> createComment(Long postId, Comment comment) {
+  public ResponseEntity<?> create(Long postId, Comment comment) {
 
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -69,7 +69,7 @@ public class CommentService {
     return new ResponseEntity<>(CommentMapper.mapDomainToVo(savedComment), HttpStatus.CREATED);
   }
 
-  public ResponseEntity<?> deleteComment(Long commentId) {
+  public ResponseEntity<?> delete(Long commentId) {
 
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
