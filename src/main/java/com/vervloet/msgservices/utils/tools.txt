@@ -225,3 +225,25 @@ Optional<Vote> userVote = votedList.stream().filter(vote -> vote.getUserId().equ
 
         return userService.getAllUsers();
     }*/
+
+    public ResponseEntity<?> getAll(){
+
+            List<User> allUsers = userRepository.findAll();
+
+            List<UserVo> allUsersVo = allUsers.stream().map(n -> UserMapper.mapDomainToVo(n))
+                .collect(Collectors.toList());
+
+            return new ResponseEntity<>(allUsersVo, HttpStatus.OK);
+        }
+
+
+    public ResponseEntity<?> getUser(Long userId) {
+
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        return  new ResponseEntity<>(UserMapper.mapDomainToVo(user), HttpStatus.OK);
+    }
+
+
+    assertEquals(((Map<String,Object>)response.getBody()).get("data").toString(), postVo.toString());

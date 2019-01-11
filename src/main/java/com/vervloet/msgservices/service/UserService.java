@@ -1,20 +1,17 @@
 package com.vervloet.msgservices.service;
 
+import com.vervloet.msgservices.domain.exceptions.ResourceNotFoundException;
 import com.vervloet.msgservices.domain.model.CustomUserDetails;
 import com.vervloet.msgservices.domain.model.User;
-import com.vervloet.msgservices.domain.exceptions.ResourceNotFoundException;
-import com.vervloet.msgservices.domain.vo.UserVo;
 import com.vervloet.msgservices.mapper.UserMapper;
 import com.vervloet.msgservices.repository.UserRepository;
-import java.util.stream.Collectors;
+import com.vervloet.msgservices.utils.ResponseBuilder;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class UserService {
@@ -22,58 +19,46 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<?> getUser(Long userId) {
+    @Autowired
+    public UserService( UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public ResponseEntity<Map<String, Object>> getComments(Long userId) {
 
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
-        return  new ResponseEntity<>(UserMapper.mapDomainToVo(user), HttpStatus.OK);
+        return  ResponseBuilder.createDataResponse(UserMapper.mapDomainToWithCommentsVo(user), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getComments(Long userId) {
+    public ResponseEntity<Map<String, Object>> getPosts(Long userId) {
 
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
-        return  new ResponseEntity<>(UserMapper.mapDomainToWithCommentsVo(user), HttpStatus.OK);
+        return  ResponseBuilder.createDataResponse(UserMapper.mapDomainToWithPostsVo(user), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getPosts(Long userId) {
-
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
-
-        return  new ResponseEntity<>(UserMapper.mapDomainToWithPostsVo(user), HttpStatus.OK);
-    }
-
-    public ResponseEntity<?> getAll(){
-
-        List<User> allUsers = userRepository.findAll();
-
-        List<UserVo> allUsersVo = allUsers.stream().map(n -> UserMapper.mapDomainToVo(n))
-            .collect(Collectors.toList());
-
-        return new ResponseEntity<>(allUsersVo, HttpStatus.OK);
-    }
-
-    public ResponseEntity<?> create(User user) {
+    public ResponseEntity<Map<String, Object>> create(User user) {
 
         if(!userRepository.findByEmail(user.getEmail()).isPresent()) {
 
             User savedUser = userRepository.save(user);
 
-            return new ResponseEntity<>(UserMapper.mapDomainToVo(savedUser), HttpStatus.CREATED);
+            return ResponseBuilder.createDataResponse(UserMapper.mapDomainToVo(savedUser), HttpStatus.CREATED);
         } else {
 
-            return new ResponseEntity<>("E-mail already registered", HttpStatus.CONFLICT);
+            return ResponseBuilder.createErrorResponse("E-mail already registered", HttpStatus.CONFLICT);
         }
     }
 
-    public ResponseEntity<?> delete(Long userId) {
+    public ResponseEntity<Map<String, Object>> delete(Long userId) {
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal();
 
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
@@ -81,15 +66,14 @@ public class UserService {
 
             userRepository.delete(user);
 
-            return  new ResponseEntity<>("User Deleted", HttpStatus.OK);
+            return  ResponseBuilder.createErrorResponse("User Deleted", HttpStatus.OK);
         } else {
 
-            return  new ResponseEntity<>("Action not authorized for this user", HttpStatus.UNAUTHORIZED);
+            return  ResponseBuilder.createErrorResponse("Action not authorized for this user", HttpStatus.FORBIDDEN);
         }
-
     }
 
-    public ResponseEntity<?> updateEmail(User userChange, Long userId){
+    public ResponseEntity<Map<String, Object>> updateEmail(User userChange, Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
@@ -97,14 +81,14 @@ public class UserService {
             user.setEmail(userChange.getEmail());
             User savedUser = userRepository.save(user);
 
-            return new ResponseEntity<>(UserMapper.mapDomainToVo(savedUser), HttpStatus.OK);
+            return ResponseBuilder.createDataResponse(UserMapper.mapDomainToVo(savedUser), HttpStatus.OK);
         } else {
 
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return ResponseBuilder.createErrorResponse("Action not authorized for this user", HttpStatus.FORBIDDEN);
         }
     }
 
-    public ResponseEntity<?> updatePassword(Map<String, String> passwords, Long userId){
+    public ResponseEntity<Map<String, Object>> updatePassword(Map<String, String> passwords, Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
@@ -113,10 +97,10 @@ public class UserService {
             user.setPassword(passwords.get("new-password"));
             User savedUser = userRepository.save(user);
 
-            return new ResponseEntity<>(UserMapper.mapDomainToVo(savedUser), HttpStatus.OK);
+            return ResponseBuilder.createDataResponse(UserMapper.mapDomainToVo(savedUser), HttpStatus.OK);
         } else {
 
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return ResponseBuilder.createErrorResponse("Action not authorized for this user", HttpStatus.FORBIDDEN);
         }
     }
 

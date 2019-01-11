@@ -4,6 +4,7 @@ import com.vervloet.msgservices.domain.model.Post;
 import com.vervloet.msgservices.service.PostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class PostController {
         tags = {"Pseudo Reddit API - Posts"}
     )
     @GetMapping()
-    public ResponseEntity<?> getAllPosts() {
+    public ResponseEntity<Map<String,Object>> getAllPosts() {
 
         return postService.getAll();
     }
@@ -37,7 +38,7 @@ public class PostController {
         tags = {"Pseudo Reddit API - Posts"}
     )
     @GetMapping("/?sort=vote-asc")
-    public ResponseEntity<?> getAllPostsByVoteNumberAsc() {
+    public ResponseEntity<Map<String,Object>> getAllPostsByVoteNumberAsc() {
 
         return postService.getAllByVoteNumberAsc();
     }
@@ -47,7 +48,7 @@ public class PostController {
         tags = {"Pseudo Reddit API - Posts"}
     )
     @GetMapping("/?sort=vote-desc")
-    public ResponseEntity<?> getAllPostsByVoteNumberDesc() {
+    public ResponseEntity<Map<String,Object>> getAllPostsByVoteNumberDesc() {
 
         return postService.getAllByVoteNumberDesc();
     }
@@ -57,7 +58,7 @@ public class PostController {
         tags = {"Pseudo Reddit API - Posts"}
     )
     @GetMapping("/?sort=comment-num")
-    public ResponseEntity<?> getAllPostsByCommentNumber() {
+    public ResponseEntity<Map<String,Object>> getAllPostsByCommentNumber() {
 
         return postService.getAllByCommentNumber();
     }
@@ -67,7 +68,7 @@ public class PostController {
         tags = {"Pseudo Reddit API - Posts"}
     )
     @GetMapping("/?sort=date-recent")
-    public ResponseEntity<?> getAllPostsByDateRecent() {
+    public ResponseEntity<Map<String,Object>> getAllPostsByDateRecent() {
 
         return postService.getAllByDateRecent();
     }
@@ -77,7 +78,7 @@ public class PostController {
         tags = {"Pseudo Reddit API - Posts"}
     )
     @GetMapping("/{postId}")
-    public ResponseEntity<?> getPostById(@PathVariable(value = "postId") Long postId) {
+    public ResponseEntity<Map<String,Object>> getPostById(@PathVariable(value = "postId") Long postId) {
 
         return postService.getById(postId);
     }
@@ -88,7 +89,7 @@ public class PostController {
         tags = {"Pseudo Reddit API - Posts"}
     )
     @PostMapping()
-    public ResponseEntity<?> createPost(@Valid @RequestBody Post post) {
+    public ResponseEntity<Map<String,Object>> createPost(@Valid @RequestBody Post post) {
 
         return postService.create(post);
     }
@@ -99,7 +100,7 @@ public class PostController {
         tags = {"Pseudo Reddit API - Posts"}
     )
     @PostMapping("/{postId}/up")
-    public ResponseEntity upvotePost(@PathVariable(value = "postId") Long messageId) {
+    public ResponseEntity<Map<String,Object>> upvotePost(@PathVariable(value = "postId") Long messageId) {
 
         return postService.upvote(messageId);
     }
@@ -110,7 +111,7 @@ public class PostController {
         tags = {"Pseudo Reddit API - Posts"}
     )
     @PostMapping("/{postId}/down")
-    public ResponseEntity downvotePost(@PathVariable(value = "postId") Long messageId) {
+    public ResponseEntity<Map<String,Object>> downvotePost(@PathVariable(value = "postId") Long messageId) {
 
         return postService.downvote(messageId);
     }
@@ -121,7 +122,7 @@ public class PostController {
         tags = {"Pseudo Reddit API - Posts"}
     )
     @DeleteMapping("/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable(value = "postId") Long postId) {
+    public ResponseEntity<Map<String,Object>> deletePost(@PathVariable(value = "postId") Long postId) {
 
         return postService.delete(postId);
     }

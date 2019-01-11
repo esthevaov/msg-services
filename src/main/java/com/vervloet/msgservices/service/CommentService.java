@@ -10,7 +10,9 @@ import com.vervloet.msgservices.mapper.CommentMapper;
 import com.vervloet.msgservices.repository.CommentRepository;
 import com.vervloet.msgservices.repository.PostRepository;
 import com.vervloet.msgservices.repository.UserRepository;
+import com.vervloet.msgservices.utils.ResponseBuilder;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,25 +32,25 @@ public class CommentService {
   @Autowired
   private CommentRepository commentRepository;
 
-  public ResponseEntity<?> getAll() {
+  public ResponseEntity<Map<String, Object>> getAll() {
 
     List<Comment> allComments = commentRepository.findAll();
 
     List<CommentVo> allCommentsVo = allComments.stream().map(n -> CommentMapper.mapDomainToVo(n))
         .collect(Collectors.toList());
 
-    return new ResponseEntity<>(allCommentsVo, HttpStatus.OK);
+    return ResponseBuilder.createDataResponse(allCommentsVo, HttpStatus.OK);
   }
 
-  public ResponseEntity<?> getById(Long commentId) {
+  public ResponseEntity<Map<String, Object>> getById(Long commentId) {
 
     Comment comment = commentRepository.findById(commentId)
         .orElseThrow(() -> new ResourceNotFoundException("comment", "id", commentId));
 
-    return new ResponseEntity<>(CommentMapper.mapDomainToVo(comment), HttpStatus.OK);
+    return ResponseBuilder.createDataResponse(CommentMapper.mapDomainToVo(comment), HttpStatus.OK);
   }
 
-  public ResponseEntity<?> create(Long postId, Comment comment) {
+  public ResponseEntity<Map<String, Object>> create(Long postId, Comment comment) {
 
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -66,10 +68,10 @@ public class CommentService {
 
     Comment savedComment = commentRepository.save(comment);
 
-    return new ResponseEntity<>(CommentMapper.mapDomainToVo(savedComment), HttpStatus.CREATED);
+    return ResponseBuilder.createDataResponse(CommentMapper.mapDomainToVo(savedComment), HttpStatus.CREATED);
   }
 
-  public ResponseEntity<?> delete(Long commentId) {
+  public ResponseEntity<Map<String, Object>> delete(Long commentId) {
 
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -80,9 +82,9 @@ public class CommentService {
 
     if( comment.getUser().getEmail().equals(customUserDetails.getUsername())){
       commentRepository.delete(comment);
-      return new ResponseEntity<>("Comment Deleted", HttpStatus.OK);
+      return ResponseBuilder.createDataResponse("Comment Deleted", HttpStatus.OK);
     } else {
-      return new ResponseEntity<>("Action not authorized for this user", HttpStatus.UNAUTHORIZED);
+      return ResponseBuilder.createErrorResponse("Action not authorized for this user", HttpStatus.UNAUTHORIZED);
     }
   }
 

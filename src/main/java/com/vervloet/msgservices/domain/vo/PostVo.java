@@ -108,6 +108,19 @@ public class PostVo extends BaseJsonApiModel {
   }
 
   @Override
+  public String toString() {
+    return "PostVo{" +
+        "id=" + id +
+        ", title='" + title + '\'' +
+        ", content='" + content + '\'' +
+        ", votes=" + votes +
+        ", created=" + created +
+        ", userId=" + userId +
+        ", commentsVos=" + commentsVos +
+        '}';
+  }
+
+  @Override
   public String getTypeName() {
     return "post";
   }

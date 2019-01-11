@@ -1,17 +1,17 @@
 package com.vervloet.msgservices.service;
 
+import com.vervloet.msgservices.domain.exceptions.ResourceNotFoundException;
 import com.vervloet.msgservices.domain.model.CustomUserDetails;
 import com.vervloet.msgservices.domain.model.Post;
-import com.vervloet.msgservices.domain.exceptions.ResourceNotFoundException;
 import com.vervloet.msgservices.domain.model.User;
 import com.vervloet.msgservices.domain.model.Vote;
 import com.vervloet.msgservices.domain.vo.PostVo;
 import com.vervloet.msgservices.mapper.PostMapper;
 import com.vervloet.msgservices.repository.PostRepository;
 import com.vervloet.msgservices.repository.UserRepository;
+import com.vervloet.msgservices.utils.ResponseBuilder;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,92 +29,88 @@ public class PostService {
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<?> create(Post post) {
+    public PostService(PostRepository postRepository,
+        UserRepository userRepository) {
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
+    }
+
+    public ResponseEntity<Map<String, Object>> create(Post post) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
 
         User user = userRepository.findByEmail(customUserDetails.getUsername())
             .orElseThrow(() -> new ResourceNotFoundException("user", "email", customUserDetails.getUsername()));
 
         post.setUser(user);
-
         post.setVotes(0L);
-
         Post savedPost = postRepository.save(post);
 
-        return new ResponseEntity<>(PostMapper.mapDomainToVo(savedPost), HttpStatus.CREATED);
+        return ResponseBuilder.createDataResponse(PostMapper.mapDomainToVo(savedPost), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<Map<String, Object>> getAll() {
 
         List<Post> allPosts = postRepository.findAll();
-
         List<PostVo> allPostsVo = allPosts.stream().map(n -> PostMapper.mapDomainToVo(n))
             .collect(Collectors.toList());
 
-        return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
+        return ResponseBuilder.createDataResponse(allPostsVo, HttpStatus.OK);
 
     }
 
-    public ResponseEntity<?> getAllByVoteNumberAsc() {
+    public ResponseEntity<Map<String, Object>> getAllByVoteNumberAsc() {
 
         List<Post> allPosts = postRepository.findAllByOrderByVotesAsc();
-
         List<PostVo> allPostsVo = allPosts.stream().map(n -> PostMapper.mapDomainToVo(n))
             .collect(Collectors.toList());
 
-        return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
+        return ResponseBuilder.createDataResponse(allPostsVo, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getAllByVoteNumberDesc() {
+    public ResponseEntity<Map<String, Object>> getAllByVoteNumberDesc() {
 
         List<Post> allPosts = postRepository.findAllByOrderByVotesDesc();
-
         List<PostVo> allPostsVo = allPosts.stream().map(n -> PostMapper.mapDomainToVo(n))
             .collect(Collectors.toList());
 
-        return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
+        return ResponseBuilder.createDataResponse(allPostsVo, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getAllByCommentNumber() {
+    public ResponseEntity<Map<String, Object>> getAllByCommentNumber() {
 
         List<Post> allPosts = postRepository.findAllByOrderByCommentsDesc();
-
         List<PostVo> allPostsVo = allPosts.stream().map(n -> PostMapper.mapDomainToVo(n))
             .collect(Collectors.toList());
 
-        return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
+        return ResponseBuilder.createDataResponse(allPostsVo, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getAllByDateRecent() {
+    public ResponseEntity<Map<String, Object>> getAllByDateRecent() {
 
         List<Post> allPosts = postRepository.findAllByOrderByCreatedDesc();
-
         List<PostVo> allPostsVo = allPosts.stream().map(n -> PostMapper.mapDomainToVo(n))
             .collect(Collectors.toList());
 
-        return new ResponseEntity<>(allPostsVo, HttpStatus.OK);
+        return ResponseBuilder.createDataResponse(allPostsVo, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getById(Long postId) {
+    public ResponseEntity<Map<String, Object>> getById(Long postId) {
 
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));
 
-        return new ResponseEntity<>(PostMapper.mapDomainToVo(post), HttpStatus.OK);
+        return ResponseBuilder.createDataResponse(PostMapper.mapDomainToVo(post), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> upvote(Long postId) {
+    public ResponseEntity<Map<String, Object>> upvote(Long postId) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
 
         User user = userRepository.findByEmail(customUserDetails.getUsername())
             .orElseThrow(() -> new ResourceNotFoundException("user", "email", customUserDetails.getUsername()));
-
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));
 
@@ -126,7 +122,7 @@ public class PostService {
             post.setVotes(post.getVotes()+1L);
         } else {
             if (votedMap.get(user.getId()).getTypeVote() == 1){
-                return new ResponseEntity<>("Already Upvoted", HttpStatus.CONFLICT);
+                return ResponseBuilder.createErrorResponse("Already Upvoted", HttpStatus.CONFLICT);
             } else {
                 votedMap.get(user.getId()).setTypeVote(1);
                 post.setVotes(post.getVotes()+2L);
@@ -134,18 +130,16 @@ public class PostService {
         }
         Post savedPost = postRepository.save(post);
 
-        return new ResponseEntity<>("Upvoted Successfully", HttpStatus.OK);
+        return ResponseBuilder.createDataResponse("Upvoted Successfully", HttpStatus.OK);
     }
 
-    public ResponseEntity<?> downvote(Long postId) {
+    public ResponseEntity<Map<String, Object>> downvote(Long postId) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
 
         User user = userRepository.findByEmail(customUserDetails.getUsername())
             .orElseThrow(() -> new ResourceNotFoundException("user", "email", customUserDetails.getUsername()));
-
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));
 
@@ -157,7 +151,7 @@ public class PostService {
             post.setVotes(post.getVotes()-1L);
         } else {
             if (votedMap.get(user.getId()).getTypeVote() == -1){
-                return new ResponseEntity<>("Already Downvoted", HttpStatus.CONFLICT);
+                return ResponseBuilder.createDataResponse("Already Downvoted", HttpStatus.CONFLICT);
             } else {
                 votedMap.get(user.getId()).setTypeVote(-1);
                 post.setVotes(post.getVotes()-2L);
@@ -165,13 +159,12 @@ public class PostService {
         }
         Post savedPost = postRepository.save(post);
 
-        return new ResponseEntity<>("Downvoted Successfully", HttpStatus.OK);
+        return ResponseBuilder.createDataResponse("Downvoted Successfully", HttpStatus.OK);
     }
 
-    public ResponseEntity<?> delete(Long postId) {
+    public ResponseEntity<Map<String, Object>> delete(Long postId) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
 
         Post post = postRepository.findById(postId)
@@ -179,9 +172,11 @@ public class PostService {
 
         if( post.getUser().getEmail().equals(customUserDetails.getUsername())){
             postRepository.delete(post);
-            return new ResponseEntity<>("Post Deleted", HttpStatus.OK);
+
+            return ResponseBuilder.createDataResponse("Post Deleted", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Action not authorized for this user", HttpStatus.UNAUTHORIZED);
+
+            return ResponseBuilder.createErrorResponse("Action not authorized for this user", HttpStatus.FORBIDDEN);
         }
     }
 

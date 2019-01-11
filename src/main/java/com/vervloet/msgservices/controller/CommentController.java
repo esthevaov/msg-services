@@ -4,6 +4,7 @@ import com.vervloet.msgservices.domain.model.Comment;
 import com.vervloet.msgservices.service.CommentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class CommentController {
       tags = {"Pseudo Reddit API - Comments"}
   )
   @GetMapping()
-  public ResponseEntity<?> getAllComments() {
+  public ResponseEntity<Map<String,Object>> getAllComments() {
 
     return commentService.getAll();
   }
@@ -44,7 +45,7 @@ public class CommentController {
       tags = {"Pseudo Reddit API - Comments"}
   )
   @GetMapping("/{commentId}")
-  public ResponseEntity<?> getCommentById(@PathVariable(value = "postId") Long postId,
+  public ResponseEntity<Map<String,Object>> getCommentById(@PathVariable(value = "postId") Long postId,
                                           @PathVariable(value = "commentId") Long commentId) {
 
     return commentService.getById(commentId);
@@ -56,7 +57,7 @@ public class CommentController {
       tags = {"Pseudo Reddit API - Comments"}
   )
   @PostMapping()
-  public ResponseEntity<?> createComment(@PathVariable(value = "postId") Long postId,
+  public ResponseEntity<Map<String,Object>> createComment(@PathVariable(value = "postId") Long postId,
                                          @Valid @RequestBody Comment comment) {
 
     return commentService.create(postId, comment);
@@ -68,7 +69,7 @@ public class CommentController {
       tags = {"Pseudo Reddit API - Comments"}
   )
   @DeleteMapping("/{commentId}")
-  public ResponseEntity<?> deleteComment(@PathVariable(value = "postId") Long postId,
+  public ResponseEntity<Map<String,Object>> deleteComment(@PathVariable(value = "postId") Long postId,
                                          @PathVariable(value = "commentId") Long commentId) {
 
     return commentService.delete(commentId);

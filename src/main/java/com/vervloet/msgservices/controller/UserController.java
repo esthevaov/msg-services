@@ -36,7 +36,7 @@ public class UserController {
         tags = {"Pseudo Reddit API - Users"}
     )
     @PostMapping("/create-user")
-    public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
+    public ResponseEntity<Map<String,Object>> createUser(@Valid @RequestBody User user) {
 
         return userService.create(user);
     }
@@ -47,7 +47,7 @@ public class UserController {
         tags = {"Pseudo Reddit API - Users"}
     )
     @GetMapping("/{userId}/posts")
-    public ResponseEntity<?> getUserPosts(@PathVariable(value = "userId") Long userId) {
+    public ResponseEntity<Map<String,Object>> getUserPosts(@PathVariable(value = "userId") Long userId) {
 
         return userService.getPosts(userId);
     }
@@ -58,7 +58,7 @@ public class UserController {
         tags = {"Pseudo Reddit API - Users"}
     )
     @GetMapping("/{userId}/comments")
-    public ResponseEntity<?> getUserComments(@PathVariable(value = "userId") Long userId) {
+    public ResponseEntity<Map<String,Object>> getUserComments(@PathVariable(value = "userId") Long userId) {
 
         return userService.getComments(userId);
     }
@@ -69,7 +69,7 @@ public class UserController {
         tags = {"Pseudo Reddit API - Users"}
     )
     @DeleteMapping("/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable(value = "userId") Long userId) {
+    public ResponseEntity<Map<String,Object>> deleteUser(@PathVariable(value = "userId") Long userId) {
 
         return userService.delete(userId);
     }
@@ -82,7 +82,7 @@ public class UserController {
         tags = {"Pseudo Reddit API - Users"}
     )
     @PutMapping("/{userId}/change-email")
-    public ResponseEntity<?> updateUserEmail(@RequestBody User user,
+    public ResponseEntity<Map<String,Object>> updateUserEmail(@RequestBody User user,
                                 @PathVariable(value = "userId") Long userId){
         return userService.updateEmail(user, userId);
     }
@@ -95,7 +95,7 @@ public class UserController {
         tags = {"Pseudo Reddit API - Users"}
     )
     @PutMapping("/{userId}/change-password")
-    public ResponseEntity<?> updateUserPassword(@RequestBody Map<String, String> passwords,
+    public ResponseEntity<Map<String,Object>> updateUserPassword(@RequestBody Map<String, String> passwords,
                                    @PathVariable(value = "userId") Long userId){
         return userService.updatePassword(passwords, userId);
     }
