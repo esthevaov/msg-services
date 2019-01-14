@@ -32,10 +32,16 @@ public class CommentService {
   @Autowired
   private CommentRepository commentRepository;
 
+  public CommentService(PostRepository postRepository,
+      UserRepository userRepository,
+      CommentRepository commentRepository) {
+    this.postRepository = postRepository;
+    this.userRepository = userRepository;
+    this.commentRepository = commentRepository;
+  }
+
   public ResponseEntity<Map<String, Object>> getAll() {
-
     List<Comment> allComments = commentRepository.findAll();
-
     List<CommentVo> allCommentsVo = allComments.stream().map(n -> CommentMapper.mapDomainToVo(n))
         .collect(Collectors.toList());
 
@@ -43,7 +49,6 @@ public class CommentService {
   }
 
   public ResponseEntity<Map<String, Object>> getById(Long commentId) {
-
     Comment comment = commentRepository.findById(commentId)
         .orElseThrow(() -> new ResourceNotFoundException("comment", "id", commentId));
 
@@ -53,19 +58,15 @@ public class CommentService {
   public ResponseEntity<Map<String, Object>> create(Long postId, Comment comment) {
 
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
     CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
 
     User user = userRepository.findByEmail(customUserDetails.getUsername())
         .orElseThrow(() -> new ResourceNotFoundException("user", "email", customUserDetails.getUsername()));
-
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new ResourceNotFoundException("post", "id", postId));;
 
     comment.setUser(user);
-
     comment.setPost(post);
-
     Comment savedComment = commentRepository.save(comment);
 
     return ResponseBuilder.createDataResponse(CommentMapper.mapDomainToVo(savedComment), HttpStatus.CREATED);
@@ -74,17 +75,17 @@ public class CommentService {
   public ResponseEntity<Map<String, Object>> delete(Long commentId) {
 
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
     CustomUserDetails customUserDetails = ((CustomUserDetails)principal);
-
     Comment comment = commentRepository.findById(commentId)
         .orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
 
     if( comment.getUser().getEmail().equals(customUserDetails.getUsername())){
       commentRepository.delete(comment);
+
       return ResponseBuilder.createDataResponse("Comment Deleted", HttpStatus.OK);
     } else {
-      return ResponseBuilder.createErrorResponse("Action not authorized for this user", HttpStatus.UNAUTHORIZED);
+
+      return ResponseBuilder.createErrorResponse("Action not authorized for this user", HttpStatus.FORBIDDEN);
     }
   }
 

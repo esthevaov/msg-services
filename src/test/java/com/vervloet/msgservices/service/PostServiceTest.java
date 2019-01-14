@@ -123,7 +123,6 @@ public class PostServiceTest {
     assertEquals(2, post.getVotes() - oldVotes);
   }
 
-
   @Test
   public void whenIDownvoteAPostForTheFirstTimeItShouldChangePostVoteNumber() {
     User user = createUser();
